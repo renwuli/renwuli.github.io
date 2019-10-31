@@ -7,7 +7,8 @@ form: true
 ---
 
 <p>Want to get in touch? Fill out the form below to send me a message and I will get back to you as soon as possible!</p>
-<form action="https://formspree.io/mrgzrlkr" method="POST" name="sentMessage" id="contactForm" novalidate>
+
+<form method="POST" action="https://formspree.io/mrgzrlkr">
   <div class="control-group">
     <div class="form-group floating-label-form-group controls">
       <label>Name</label>
@@ -18,7 +19,7 @@ form: true
   <div class="control-group">
     <div class="form-group floating-label-form-group controls">
       <label>Email Address</label>
-      <input type="email" name="email" class="form-control" placeholder="Email Address" id="email" required data-validation-required-message="Please enter your email address.">
+      <input type="email" name="_replyto" class="form-control" placeholder="Email Address" id="email" required data-validation-required-message="Please enter your email address.">
       <p class="help-block text-danger"></p>
     </div>
   </div>

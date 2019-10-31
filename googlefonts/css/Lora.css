@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Lora Italic'), local('Lora-Italic'), url(../fonts/Lora/Lora-Italic.ttf) format('truetype'), url(../fonts/Lora/Lora-Italic.woff) format('woff'), url(../fonts/Lora/Lora-Italic.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Lora Bold Italic'), local('Lora-BoldItalic'), url(../fonts/Lora/Lora-Bold-Italic.ttf) format('truetype'), url(../fonts/Lora/Lora-Bold-Italic.woff) format('woff'), url(../fonts/Lora/Lora-Bold-Italic.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/Lora/Lora-Regular.eot);
+  src: local('Lora Regular'), local('Lora-Regular'), local('Lora'), url(../fonts/Lora/Lora-Regular.ttf) format('truetype'), url(../fonts/Lora/Lora-Regular.eot?#iefix) format('embedded-opentype'), url(../fonts/Lora/Lora-Regular.woff) format('woff'), url(../fonts/Lora/Lora-Regular.woff2) format('woff2'), url(../fonts/Lora/Lora-Regular.svg#Lora) format('svg');
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lora Bold'), local('Lora-Bold'), url(../fonts/Lora/Lora-Bold.ttf) format('truetype'), url(../fonts/Lora/Lora-Bold.woff) format('woff'), url(../fonts/Lora/Lora-Bold.woff2) format('woff2');
+}
+

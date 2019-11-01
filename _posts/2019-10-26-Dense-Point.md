@@ -2,7 +2,7 @@
 layout: post
 title: "Dense Point"
 subtitle: "Point Cloud"
-date: 2019-10-16 00:00:00 UTC
+date: 2019-10-26 00:00:00 UTC
 background: '/img/posts/DensePoint.png'
 ---
 

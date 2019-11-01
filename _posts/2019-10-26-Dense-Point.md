@@ -21,7 +21,11 @@ background: '/img/posts/DensePoint_motivation.png'
 
 ## How it works
 
-$$f_{N(x)} = p({f_{x_n}(x)})$$
+卷积算子：和大部分的点云卷积算子类似，对点云中特定的点$x$进行卷积，也就是对该点的邻域点云$\mathcal{N}(x)$做特征提取$\phi$和特征聚集$\rho$。像$PointNet$使用了`Shared MLP`作为特征提取的手段，而本文为了提升效率采用了`single-layer perceptron(SLP)`，特征聚集一般是一个对称函数，常用的比如有`sum`和`max`。
+
+$$\mathbf{f}_{\mathcal{N}(x)} = \rho({\phi(\mathbf{f}_{x_n})}, \forall x_{n} \in \mathcal{N}(x))$$
+
+从网络结构上来看，极大借鉴了`DenseNet`，赋予网络强大的表达能力。
 
 ## Summary:
 

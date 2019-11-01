@@ -19,6 +19,10 @@ background: '/img/posts/DensePoint_motivation.png'
 
 ![DensePoint](https://renwuli.github.io/img/posts/DensePoint.png)
 
+# How it works
+
+$$f_{N(x)} = p({f_{x_n}(x)})$$
+
 ## Summary:
 
 优势：网络模型小、速度快，更好地利用contexual信息，对稀疏点云更加鲁棒

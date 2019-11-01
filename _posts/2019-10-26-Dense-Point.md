@@ -19,7 +19,7 @@ background: '/img/posts/DensePoint_motivation.png'
 
 ![DensePoint](https://renwuli.github.io/img/posts/DensePoint.png)
 
-# How it works
+## How it works
 
 $$f_{N(x)} = p({f_{x_n}(x)})$$
 

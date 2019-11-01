@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Dense Point"
+title: "ICCV2019 Dense Point"
 subtitle: "Point Cloud"
 date: 2019-10-26 00:00:00 UTC
 background: '/img/posts/DensePoint_motivation.png'

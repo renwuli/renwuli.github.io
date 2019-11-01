@@ -17,7 +17,9 @@ background: '/img/posts/DensePoint_motivation.png'
 
 丰富的上下文语义信息对点云处理是至关重要的，但是之前的工作大多对此重视不足。本文提出了`DensePoint`，一种能够充分挖掘点云语义信息的方法。从技术上来看，是通过定义点云卷积来获取点云的语义信息，从网络结构上来看，是充分借鉴了二维图像领域里的`DenseNet`，通过稠密连接来获取多层级和多尺度的语义信息。
 
-<center> ![Motivation](https://renwuli.github.io/img/posts/DensePoint.png) </center>
+<div style="align: center">
+<img src="https://renwuli.github.io/img/posts/DensePoint.png"/>
+</div>
 
 ## Summary:
 

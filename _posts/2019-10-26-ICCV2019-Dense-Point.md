@@ -11,9 +11,9 @@ background: '/img/posts/DensePoint_motivation.png'
 - Title: 《DensePoint: Learning Densely Contextual Representation for Efficient Point Cloud Processing》
 - Source: ICCV2019 Oral
 - Subject: Point Cloud Convolution
-- Link: https://arxiv.org/pdf/1909.03669.pdf
+- Link: http://openaccess.thecvf.com/content_ICCV_2019/papers/Liu_DensePoint_Learning_Densely_Contextual_Representation_for_Efficient_Point_Cloud_Processing_ICCV_2019_paper.pdf
 
-## 简介
+## Introduction
 
 丰富的上下文语义信息对点云处理是至关重要的，但是之前的工作大多对此重视不足。本文提出了`DensePoint`，一种能够充分挖掘点云语义信息的方法。从技术上来看，是通过定义点云卷积来获取点云的语义信息，从网络结构上来看，是充分借鉴了二维图像领域里的`DenseNet`，通过稠密连接来获取多层级和多尺度的语义信息。
 

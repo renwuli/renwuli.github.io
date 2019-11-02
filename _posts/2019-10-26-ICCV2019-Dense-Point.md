@@ -6,12 +6,12 @@ date: 2019-10-26 00:00:00 UTC
 background: '/img/posts/DensePoint_motivation.png'
 ---
 
-## From
 
+---
 - Title: 《DensePoint: Learning Densely Contextual Representation for Efficient Point Cloud Processing》
 - Source: ICCV2019 Oral
 - Subject: Point Cloud Convolution
-- Link: http://openaccess.thecvf.com/content_ICCV_2019/papers/Liu_DensePoint_Learning_Densely_Contextual_Representation_for_Efficient_Point_Cloud_Processing_ICCV_2019_paper.pdf
+- [[Paper Link]](http://openaccess.thecvf.com/content_ICCV_2019/papers/Liu_DensePoint_Learning_Densely_Contextual_Representation_for_Efficient_Point_Cloud_Processing_ICCV_2019_paper.pdf)
 
 ## Introduction
 

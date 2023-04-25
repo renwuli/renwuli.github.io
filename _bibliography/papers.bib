@@ -1,0 +1,22 @@
+---
+---
+
+@string{aps = {American Physical Society,}}
+
+@article{LI2023101173,
+title = {High-fidelity point cloud completion with low-resolution recovery and noise-aware upsampling},
+journal = {Graphical Models},
+volume = {126},
+pages = {101173},
+year = {2023},
+issn = {1524-0703},
+doi = {https://doi.org/10.1016/j.gmod.2023.101173},
+url = {https://www.sciencedirect.com/science/article/pii/S1524070323000048},
+html = {https://www.sciencedirect.com/science/article/pii/S1524070323000048},
+pdf = {https://www.sciencedirect.com/science/article/pii/S1524070323000048/pdfft?md5=73563ed9fde7cae0fb0cea97f5e35ae8&pid=1-s2.0-S1524070323000048-main.pdf},
+bibtex_show = true,
+author = {Ren-Wu Li and Bo Wang and Lin Gao and Ling-Xiao Zhang and Chun-Peng Li},
+keywords = {Point cloud completion, Point cloud analysis, Deep learning, Computer vision},
+abstract = {Completing an unordered partial point cloud is a challenging task. Existing approaches that rely on decoding a latent feature to recover the complete shape, often lead to the completed point cloud being over-smoothing, losing details, and noisy. Instead of decoding a whole shape, we propose to decode and refine a low-resolution (low-res) point cloud first, and then perform a patch-wise noise-aware upsampling rather than interpolating the whole sparse point cloud at once, which tends to lose details. Regarding the possibility of lacking details of the initially decoded low-res point cloud, we propose an iterative refinement to recover the geometric details and a symmetrization process to preserve the trustworthy information from the input partial point cloud. After obtaining a sparse and complete point cloud, we propose a patch-wise upsampling strategy. Patch-based upsampling allows to recover fine details better rather than decoding a whole shape. The patch extraction approach is to generate training patch pairs between the sparse and ground-truth point clouds with an outlier removal step to suppress the noisy points from the sparse point cloud. Together with the low-res recovery, our whole pipeline can achieve high-fidelity point cloud completion. Comprehensive evaluations are provided to demonstrate the effectiveness of the proposed method and its components.},
+preview={gm.png}
+}

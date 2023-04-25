@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://renwuli.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://renwuli.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-04-25T14:41:52+00:00</updated><id>https://renwuli.github.io/feed.xml</id><title type="html">Ren-Wu Li</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://renwuli.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://renwuli.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-04-25T14:50:47+00:00</updated><id>https://renwuli.github.io/feed.xml</id><title type="html">Ren-Wu Li</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
 </subtitle><entry><title type="html">ORBSLAM3 All in One</title><link href="https://renwuli.github.io/blog/2023/ORBSLAM3-All-in-One/" rel="alternate" type="text/html" title="ORBSLAM3 All in One" /><published>2023-04-10T14:00:00+00:00</published><updated>2023-04-10T14:00:00+00:00</updated><id>https://renwuli.github.io/blog/2023/ORBSLAM3-All-in-One</id><content type="html" xml:base="https://renwuli.github.io/blog/2023/ORBSLAM3-All-in-One/"><![CDATA[<p>写这篇文章的初衷有两个，一是目前的简中互联网实在是没有对ORBSLAM3庖丁解牛解析很全面的博客，尽管有很多从理论和代码层面都分析的不错的文章和视频，还有开源的带注释的源码，但都不够系统，且有些资源是收费的；二是想要消化一下对ORBSLAM3，加深对此算法的理解，做到知其然并知其所以然。我希望能够通过我这篇长文，能够让希望了解ORBSLAM3算法的朋友不用再费心费力去找别的资料，一文就能搞懂理论和代码，所以我给这篇文章起了个题目：<em>ORBSLAM3 All in One</em>。</p>
 
 <p>不同于其他文章可能会上来就讲前端，诸如ORB特征点是什么啊，为什么ORB特征具有旋转不变性啊，怎么用八叉树均匀地将特征点铺满整张图上啊，我觉得这些问题都非常细，一上来就看这些容易让人陷入局部极小值跳不出来，无法从宏观的角度去俯瞰整个世界，导致对ORBSLAM3失去兴趣。我将会以 <em>算法总览</em> – <em>算法详解</em> – <em>问题</em> 的思路，去介绍ORBSLAM3。</p>
@@ -163,7 +163,7 @@
 
 <center>
 <div class="jekyll-diagrams diagrams mermaid">
-  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-2320-r86zxg --output /tmp/output20230425-2320-kzzpbn.svg: node:internal/process/promises:288
+  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-1721-7zguom --output /tmp/output20230425-1721-3vya2z.svg: node:internal/process/promises:288
             triggerUncaughtException(err, true /* fromPromise */);
             ^
 
@@ -222,7 +222,7 @@ Node.js v18.16.0
 
 <center>
 <div class="jekyll-diagrams diagrams mermaid">
-  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-2320-zgz5cf --output /tmp/output20230425-2320-bh3mbf.svg: node:internal/process/promises:288
+  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-1721-t8xf9c --output /tmp/output20230425-1721-5ic974.svg: node:internal/process/promises:288
             triggerUncaughtException(err, true /* fromPromise */);
             ^
 
@@ -273,7 +273,7 @@ Node.js v18.16.0
 
 <center>
 <div class="jekyll-diagrams diagrams mermaid">
-  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-2320-xc9crx --output /tmp/output20230425-2320-tshef1.svg: node:internal/process/promises:288
+  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-1721-882623 --output /tmp/output20230425-1721-c6jfs7.svg: node:internal/process/promises:288
             triggerUncaughtException(err, true /* fromPromise */);
             ^
 
@@ -324,7 +324,7 @@ Node.js v18.16.0
 
 <center>
 <div class="jekyll-diagrams diagrams mermaid">
-  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-2320-z3209w --output /tmp/output20230425-2320-3i23k7.svg: node:internal/process/promises:288
+  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-1721-ak6en6 --output /tmp/output20230425-1721-xfy6ra.svg: node:internal/process/promises:288
             triggerUncaughtException(err, true /* fromPromise */);
             ^
 
@@ -375,7 +375,7 @@ Node.js v18.16.0
 
 <center>
 <div class="jekyll-diagrams diagrams mermaid">
-  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-2320-v6j5le --output /tmp/output20230425-2320-2g9ibs.svg: node:internal/process/promises:288
+  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-1721-yaa38e --output /tmp/output20230425-1721-6omkaq.svg: node:internal/process/promises:288
             triggerUncaughtException(err, true /* fromPromise */);
             ^
 
@@ -427,7 +427,7 @@ Node.js v18.16.0
 
 <center>
 <div class="jekyll-diagrams diagrams mermaid">
-  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-2320-pq8yv6 --output /tmp/output20230425-2320-xbpbe.svg: node:internal/process/promises:288
+  Rendering Failed: mmdc --puppeteerConfigFile /home/runner/work/renwuli.github.io/renwuli.github.io/vendor/bundle/ruby/3.2.0/gems/jekyll-diagrams-0.10.0/vendor/mermaid_puppeteer_config.json --input /tmp/input20230425-1721-kawddc --output /tmp/output20230425-1721-cp97gc.svg: node:internal/process/promises:288
             triggerUncaughtException(err, true /* fromPromise */);
             ^
 

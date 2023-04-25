@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://renwuli.github.io/sitemap.xml

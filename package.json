@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "i": "^0.3.7",
-    "mermaid.cli": "^10.1.0",
-    "puppeteer": "^19.10.1"
-  }
-}

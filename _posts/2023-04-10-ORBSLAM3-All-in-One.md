@@ -111,7 +111,7 @@ Atlas的主要作用是管理和优化大规模地图，因为ORB-SLAM3可以将
 <center>
 {% mermaid %}
 ---
-title: 初始化
+title: 跟踪线程
 ---
 flowchart TB
     初始化 --> 跟踪 --> 记录位姿信息

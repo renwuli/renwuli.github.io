@@ -6,7 +6,8 @@
     },
     "theme": "neutral",
     "themeVariables": {
-        "fontSize": "12px",
+        "fontSize": "14px",
         "pieTitleTextSize": "16px"
-    }
+    },
+    "themeCSS": ".node rect { fill: white; }"
 }

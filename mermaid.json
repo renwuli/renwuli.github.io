@@ -4,9 +4,9 @@
         "useMaxWidth": true,
         "htmlLabels": false
     },
-    "theme": "base",
+    "theme": "neutral",
     "themeVariables": {
-        "fontSize": "10px"
-    },
-    "themeCSS": ".node rect { fill: white; }"
+        "fontSize": "12px",
+        "pieTitleTextSize": "16px"
+    }
 }

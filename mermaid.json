@@ -1,0 +1,12 @@
+{
+    "startOnLoad": true,
+    "flowchart": {
+        "useMaxWidth": true,
+        "htmlLabels": false
+    },
+    "theme": "base",
+    "themeVariables": {
+        "fontSize": "10px"
+    },
+    "themeCSS": ".node rect { fill: white; }"
+}

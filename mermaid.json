@@ -2,12 +2,12 @@
     "startOnLoad": true,
     "flowchart": {
         "useMaxWidth": true,
-        "htmlLabels": false
+        "htmlLabels": false,
+        "nodeSpacing": 60
     },
     "theme": "neutral",
     "themeVariables": {
         "fontSize": "14px",
         "pieTitleTextSize": "16px"
-    },
-    "themeCSS": ".node rect { fill: white; }"
+    }
 }

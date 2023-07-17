@@ -1,0 +1,13 @@
+{
+    "startOnLoad": true,
+    "flowchart": {
+        "useMaxWidth": true,
+        "htmlLabels": false,
+        "nodeSpacing": 60
+    },
+    "theme": "neutral",
+    "themeVariables": {
+        "fontSize": "14px",
+        "pieTitleTextSize": "16px"
+    }
+}

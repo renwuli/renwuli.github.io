@@ -19,10 +19,11 @@ social: true  # includes social icons at the bottom of the page
 I am currently an senior software development engineer working in [AMD](https://www.amd.com/). I got my Master's degree from [Institute of Computing Technology, Chinese Academy of Sciences (ICT)](http://english.ict.cas.cn/), supervised by Prof. [Chun-Peng Li](https://people.ucas.ac.cn/~vr) and Prof. [Lin Gao](http://www.geometrylearning.com/). Before that, I got my Bechlor's degree from [Dalian University of Technology (DLUT)](https://en.dlut.edu.cn/).
 
 ## Interests
+- LLM (Large Language Model) Inference & Training Acceleration
+- Model Optimization (Pruning, Quantization)
+- SLAM
 - 3D Reconstruction
 - 3D Computer Vison
-- SLAM
-- Model Optimization (Pruning, Quantization and Deployment)
 
 ## Professional Experience
 
@@ -33,7 +34,7 @@ I am currently an senior software development engineer working in [AMD](https://
     - Perception, Beijing, China (Aug 2021)
     - Algorithm Intern
 + [Xilinx](https://www.xilinx.com/)
-    - Algorithm, Beijing, China (Dec 2020 - Aug 2021)
+    - AI Algorithm, Beijing, China (Dec 2020 - Aug 2021)
     - Algorithm Intern
 
 ## Education

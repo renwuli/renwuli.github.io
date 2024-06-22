@@ -21,7 +21,7 @@ I am currently an senior software development engineer working in [AMD](https://
 ## Interests
 - LLM (Large Language Model) Inference & Training Acceleration
 - Model Optimization (Pruning, Quantization)
-- SLAM
+- Vision / Neural SLAM, Multi Sensor Fusion
 - 3D Reconstruction
 - 3D Computer Vison
 

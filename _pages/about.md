@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: <u>一万年太久，只争朝夕</u>
+subtitle: <u>加速、加速！</u>
 
 profile:
   align: right
@@ -19,11 +19,9 @@ social: true  # includes social icons at the bottom of the page
 I am currently an senior software development engineer working in [AMD](https://www.amd.com/). I got my Master's degree from [Institute of Computing Technology, Chinese Academy of Sciences (ICT)](http://english.ict.cas.cn/), supervised by Prof. [Chun-Peng Li](https://people.ucas.ac.cn/~vr) and Prof. [Lin Gao](http://www.geometrylearning.com/). Before that, I got my Bechlor's degree from [Dalian University of Technology (DLUT)](https://en.dlut.edu.cn/).
 
 ## Interests
-- LLM (Large Language Model) Inference & Training Acceleration
-- Model Optimization (Pruning, Quantization)
-- Vision / Neural SLAM, Multi Sensor Fusion
-- 3D Reconstruction
-- 3D Computer Vison
+- LLM (Large Language Model) Inference & Training
+- Visual-Inertial SLAM & Neural SLAM & Multi Sensor Fusion
+- 3D Reconstruction & Computer Graphics
 
 ## Professional Experience
 

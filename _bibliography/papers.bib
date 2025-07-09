@@ -60,8 +60,11 @@ abstract = {Detecting symmetrical properties is a fundamental task in 3D shape a
 author = {Ren-Wu Li and Wenjing Ke and Dong Li and Lu Tian and Emad Barsoum},
 title     = {MonoGS++: Fast and Accurate Monocular RGB Gaussian SLAM},
 booktitle = {The British Machine Vision Conference (BMVC)},
-month     = {November },
+month     = {November},
 year      = {2024},
 preview = {monogs++.png},
 bibtex_show = true,
+html = {https://bmvc2024.org/proceedings/133/},
+pdf = {https://bmva-archive.org.uk/bmvc/2024/papers/Paper_133/paper.pdf},
+abstract = {We present MonoGS++, a novel fast and accurate Simultaneous Localization and Mapping (SLAM) method that leverages 3D Gaussian representations and operates solely on RGB inputs. While previous 3D Gaussian Splatting (GS)-based methods largely depended on depth sensors, our approach reduces the hardware dependency and only requires RGB input, leveraging online visual odometry (VO) to generate sparse point clouds in real-time. To reduce redundancy and enhance the quality of 3D scene reconstruction, we implemented a series of methodological enhancements in 3D Gaussian mapping. Firstly, we introduced dynamic 3D Gaussian insertion to avoid adding redundant Gaussians in previously well-reconstructed areas. Secondly, we introduced clarity-enhancing Gaussian densification module and planar regularization to handle texture-less areas and flat surfaces better. We achieved precise camera tracking results both on the synthetic Replica and real-world TUM-RGBD datasets, comparable to those of the state-of-the-art. Additionally, our method realized a significant 5.57x improvement in frames per second (fps) over the previous state-of-the-art, MonoGS.}
 }

@@ -19,9 +19,8 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
 
 ## Overview
 
-| 输入 | 输出 |
-| :------ | ------: |
-| RGB-D | $$ M^{\text{ref}} $$ 个镜面对称和 $$ M^{\text{rot}} $$ 个旋转对称 |
+- 输入：RGB-D
+- 输出：$$M^{\text{ref}}$$ 个镜面对称和 $$M^{\text{rot}}$$ 个旋转对称
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -61,10 +60,10 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
 3. 2范数
 4. cross-entropy
 
-对于旋转对称来说，我们去做上面3的loss不太容易，因为一个点的旋转对称点有可能有多个（旋转对称的阶数有穷）或无穷多个（连续的旋转对称），所以该文选择不直接对3做L2的loss，而是去预测某点在不在该点对应的旋转对称轨道上的概率。并且通过将预测旋转对称的阶数转换成一个分类的问题，也就是0-R类，0代表连续旋转对称，R代表所能预测的最大旋转对称阶数，该文将R取作10，也就是说该文能预测的最大的旋转对称的阶数为10。
+对于旋转对称来说，我们去做上面 3 的 loss 不太容易，因为一个点的旋转对称点有可能有多个（旋转对称的阶数有穷）或无穷多个（连续的旋转对称），所以该文选择不直接对 3 做 L2 的 loss，而是去预测某点在不在该点对应的旋转对称轨道上的概率。并且通过将预测旋转对称的阶数转换成一个分类的问题，也就是 0~R 类，0 代表连续旋转对称，R 代表所能预测的最大旋转对称阶数，该文将 R 取作 10，也就是说该文能预测的最大的旋转对称的阶数为 10。
 
 ### 处理任意数目的对称性
-如果要处理任意数目的对称性预测，要不设计一个循环神经网络（显然是不现实的，因为我要知道到底循环多少次？），要么是引出M个分支来预测M个对称性（其中M是设定的最大对称性的数目）。但是采用后者的策略需要将M个分支各自区分开来（也就是定义顺序），该文采用基于optimal assignment的方法来训练网络。也就是将M个输出与GT对应起来。
+如果要处理任意数目的对称性预测，要不设计一个循环神经网络（显然是不现实的，因为我要知道到底循环多少次？），要么是引出 M 个分支来预测 M 个对称性（其中 M 是设定的最大对称性的数目）。但是采用后者的策略需要将 M 个分支各自区分开来（也就是定义顺序），该文采用基于 optimal assignment 的方法来训练网络。也就是将M个输出与GT对应起来。
 
 对于那些已经被判断对称性种类的分类器验证（输出不为0）的对称性预测值，找到它所对应的GT对称性，然后求loss。
 
@@ -81,7 +80,7 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
 
 ### 对称性推理
 
-在推理阶段，首先编码得到RGB-D的特征，然后对每个点进行对称性预测，然后使用聚类的方式得到最终的全局对称性预测结果。因为每个点预测对称性的准确性有差异，这里通过对symmetry type classifier的最后一层接一个概率层，得到每个点预测结果的权重，之后将这个概率作为DBSCAN中的密度权重，通过聚类得到最终的预测结果。
+在推理阶段，首先编码得到 RGB-D 的特征，然后对每个点进行对称性预测，然后使用聚类的方式得到最终的全局对称性预测结果。因为每个点预测对称性的准确性有差异，这里通过对 symmetry type classifier 的最后一层接一个概率层，得到每个点预测结果的权重，之后将这个概率作为 DBSCAN 中的密度权重，通过聚类得到最终的预测结果。
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -92,14 +91,14 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
     Figure 3
 </div>
 
-得到预测的对称性结果之后，还需要做的是对称性的检验，通过检验的对称性留下，没有通过检验的去除。将深度图转换为提速表示，将空间划分为三部分：可视部分，空气部分和未知部分，然后得到可视部分的对称部分，将对称部分与空气部分求交，便得到了mismatch的部分（很容易理解，如果对称部分是合理的，那么我摄像头应该本来就能看到，按理来说应该是可视部分，但是现在却为空气部分，说明不合理）。如果mismatch的部分太大，就说明该对称性预测的不对。这个策略作者也在训练阶段作为一项额外的约束进行了尝试，但是发现收敛太慢，所以就只在推理完之后作为一个验证手段。
+得到预测的对称性结果之后，还需要做的是对称性的检验，通过检验的对称性留下，没有通过检验的去除。将深度图转换为提速表示，将空间划分为三部分：可视部分，空气部分和未知部分，然后得到可视部分的对称部分，将对称部分与空气部分求交，便得到了 mismatch 的部分（很容易理解，如果对称部分是合理的，那么我摄像头应该本来就能看到，按理来说应该是可视部分，但是现在却为空气部分，说明不合理）。如果 mismatch 的部分太大，就说明该对称性预测的不对。这个策略作者也在训练阶段作为一项额外的约束进行了尝试，但是发现收敛太慢，所以就只在推理完之后作为一个验证手段。
 
 
 ## 评价标准
 
-该文使用precision-recall指标来评价对称性预测的好与坏，其中precision代表我预测的对称性中有多大比例是正确的，而recall代表GT中的对称性我有多大的比例正确预测出来了。
+该文使用 precision-recall 指标来评价对称性预测的好与坏，其中 precision 代表我预测的对称性中有多大比例是正确的，而 recall 代表 GT 中的对称性我有多大的比例正确预测出来了。
 
-关于如何衡量预测的对称性是正确还是错误，作者给出了一个简单的评估指标：将模型按照预测的对称性对称过去，然后求原模型和对称模型的距离，该距离与GT对称性求得的距离做损失来打分。
+关于如何衡量预测的对称性是正确还是错误，作者给出了一个简单的评估指标：将模型按照预测的对称性对称过去，然后求原模型和对称模型的距离，该距离与 GT 对称性求得的距离做损失来打分。
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -112,14 +111,14 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
 
 ## Implementation
 
-读完paper有一个问题，如果每个模型都预测$M$个对称性，但是每个模型的实际对称性个数可不是都一样的，有的模型1个对称，有的模型2个对称，有的模型可能更多，那么怎么做批处理，计算loss反传呢？读作者的代码，从 <a href=https://github1s.com/GodZarathustra/SymmetryNet/blob/HEAD/lib/loss.py#L10-L11>code</a> 可以看到作者在每次计算loss的时候，实际上batch size为1，在 <a href=https://github1s.com/GodZarathustra/SymmetryNet/blob/HEAD/tools/train_shapenet.py#L81-L82>code</a> 也可以看到dataloader的batch size也被设为1了，那么事情就变得明了，作者在实际实现的时候，是一个模型一个模型训练的，没有采用批处理，这也算是无奈之举。
+读完 paper 有一个问题，如果每个模型都预测 $$M$$ 个对称性，但是每个模型的实际对称性个数可不是都一样的，有的模型 1 个对称，有的模型 2 个对称，有的模型可能更多，那么怎么做批处理，计算 loss 反传呢？读作者的代码，从 https://github.com/GodZarathustra/SymmetryNet/blob/HEAD/lib/loss.py#L10-L11 可以看到作者在每次计算 loss 的时候，实际上 batch size 为 1，在 https://github.com/GodZarathustra/SymmetryNet/blob/HEAD/tools/train_shapenet.py#L81-L82 也可以看到 dataloader 的 batch size 也被设为 1 了，那么事情就变得明了，作者在实际实现的时候，是一个模型一个模型训练的，没有采用批处理，这也算是无奈之举。
 
 ## 总结
 
 Pros.
 1. it handles RGB-D inputs, and can deal with incomplete and partial observation
 2. end-to-end deep learning method
-   
+
 Cons:
 1. strong supervision
 2. limited with pre-defined maximum of number of symmetries per object

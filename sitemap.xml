@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>https://renwuli.github.io/blog/2022/NeRD.en/</loc>
+<lastmod>2022-04-01T15:00:00+00:00</lastmod>
+</url>
+<url>
 <loc>https://renwuli.github.io/blog/2022/NeRD/</loc>
+<lastmod>2022-04-01T15:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>https://renwuli.github.io/blog/2022/SymmetryNet.en/</loc>
 <lastmod>2022-04-01T15:00:00+00:00</lastmod>
 </url>
 <url>

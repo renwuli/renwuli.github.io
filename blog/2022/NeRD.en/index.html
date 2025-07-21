@@ -34,7 +34,7 @@
     <link rel="shortcut icon" href="/assets/img/logo.ico">
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="https://renwuli.github.io/blog/2022/NeRD/">
+    <link rel="canonical" href="https://renwuli.github.io/blog/2022/NeRD.en/">
     
     <!-- Dark Mode -->
     
@@ -135,10 +135,10 @@
 <li class="toc-entry toc-h2">
 <a href="#methods">Methods</a>
 <ul>
-<li class="toc-entry toc-h3"><a href="#%E6%A3%80%E9%AA%8C%E5%AF%B9%E7%A7%B0%E6%80%A7">检验对称性</a></li>
-<li class="toc-entry toc-h3"><a href="#%E9%A2%84%E6%B5%8B">预测</a></li>
+<li class="toc-entry toc-h3"><a href="#symmetry-verification">Symmetry Verification</a></li>
+<li class="toc-entry toc-h3"><a href="#prediction">Prediction</a></li>
 <li class="toc-entry toc-h3"><a href="#pipeline">Pipeline</a></li>
-<li class="toc-entry toc-h3"><a href="#%E8%AE%AD%E7%BB%83">训练</a></li>
+<li class="toc-entry toc-h3"><a href="#training">Training</a></li>
 </ul>
 </li>
 <li class="toc-entry toc-h2">
@@ -163,52 +163,53 @@
 <table>
   <thead>
     <tr>
-      <th style="text-align: left">输入</th>
-      <th style="text-align: left">输出</th>
+      <th style="text-align: left">Input</th>
+      <th style="text-align: left">Output</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="text-align: left">单视角图片</td>
-      <td style="text-align: left">一个主导的镜面对称</td>
+      <td style="text-align: left">Single-view image</td>
+      <td style="text-align: left">A dominant mirror symmetry</td>
     </tr>
   </tbody>
 </table>
 
-<p>总体方法：</p>
+<p>General approach:</p>
+
 <ol>
-  <li>使用coarse-to-fine的策略对symmetry进行遍历</li>
-  <li>通过构造3D的代价体来找到最好的symmetry</li>
+  <li>Use a coarse-to-fine strategy to traverse symmetries</li>
+  <li>Construct a 3D cost volume to find the best symmetry</li>
 </ol>
 
 <h2 id="introduction">
 <a class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
 
-<p>使用监督学习从单张RGB图片中获取信息很容易 \(\rightarrow\) 假设CAD模型已知，一些工作聚焦在instance-level 3D pose estimation \(\rightarrow\) 现实世界中这个假设很难成立（一个物体的CAD模型很难获取）\(\rightarrow\) 之前的一些single-view category-level 3D pose estimation的工作通过在训练数据中进行插值来构建图像和3D模型之间的集合约束进而预测姿态 \(\rightarrow\) 但是这种formulation是ill-posed  \(\rightarrow\) 引入镜面对称（reflection symmetry）作为图片和3D模型的位姿之间的桥梁。</p>
+<p>It is easy to obtain information from a single RGB image using supervised learning \(\rightarrow\) Assuming the CAD model is known, some works focus on instance-level 3D pose estimation \(\rightarrow\) In reality, this assumption is hard to satisfy (it’s difficult to obtain a CAD model for every object) \(\rightarrow\) Some previous single-view category-level 3D pose estimation works interpolate in the training data to build set constraints between images and 3D models for pose prediction \(\rightarrow\) But this formulation is ill-posed \(\rightarrow\) Introduce mirror symmetry (reflection symmetry) as a bridge between image and 3D model pose.</p>
 
-<p>观察：大部分物体的canonical space是将其对称平面与Y-Z平面进行对齐。</p>
+<p>Observation: Most objects’ canonical space aligns their symmetry plane with the Y-Z plane.</p>
 
-<p>Contributiion:</p>
+<p>Contribution:</p>
 
 <ul>
-  <li>图像内的像素对应可以用来得到准确的对称平面法向估计</li>
-  <li>使用single-view dense feature matching来预测对称平面，性能超越之前的工作</li>
-  <li>对称性对很多下游任务都有助益，比如single-view姿态估计和深度估计</li>
+  <li>Pixel correspondences within the image can be used to accurately estimate the normal of the symmetry plane</li>
+  <li>Use single-view dense feature matching to predict the symmetry plane, outperforming previous works</li>
+  <li>Symmetry benefits many downstream tasks, such as single-view pose estimation and depth estimation</li>
 </ul>
 
 <h2 id="methods">
 <a class="anchor" href="#methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods</h2>
 
-<h3 id="检验对称性">
-<a class="anchor" href="#%E6%A3%80%E9%AA%8C%E5%AF%B9%E7%A7%B0%E6%80%A7" aria-hidden="true"><span class="octicon octicon-link"></span></a>检验对称性</h3>
+<h3 id="symmetry-verification">
+<a class="anchor" href="#symmetry-verification" aria-hidden="true"><span class="octicon octicon-link"></span></a>Symmetry Verification</h3>
 
-<p>对于三维空间中的两个对称点 \(\mathrm{X}\) 和 \(\mathrm{X}^{'}\) 来说，其在成像平面上的投影为 \(\mathrm{x}\) 和 \(\mathrm{x}^{'}\)，则：</p>
+<p>For two symmetric points \(\mathrm{X}\) and \(\mathrm{X}^{'}\) in 3D space, their projections on the image plane are \(\mathrm{x}\) and \(\mathrm{x}^{'}\), then:</p>
 
 \[\mathrm{x}^{'} \propto \mathrm{KR_t M R_t^{-1}K^{-1}x = Cx}\]
 
-<p>其中 \(\mathrm{C = KR_t M R_t^{-1}K^{-1}}\)。</p>
+<p>where \(\mathrm{C = KR_t M R_t^{-1}K^{-1}}\).</p>
 
-<p>将镜面对称参数化为 \(\mathrm{w} \in \mathbb{R}^3\)（代表对称平面的法向），那么：</p>
+<p>Parameterize the mirror symmetry as \(\mathrm{w} \in \mathbb{R}^3\) (the normal of the symmetry plane), then:</p>
 
 \[\mathrm{
     C(w) = K(I - \frac{2}{\Vert w \Vert_2^2}
@@ -221,11 +222,12 @@
     )K^{-1}
 }\]
 
-<p>也就是说 \(\mathrm{C}\) 是 \(\mathrm{w}\) 的函数，并且相应地给出一种检验其是否合法的方法。</p>
+<p>That is, \(\mathrm{C}\) is a function of \(\mathrm{w}\), and thus provides a way to verify its validity.</p>
 
-<h3 id="预测">
-<a class="anchor" href="#%E9%A2%84%E6%B5%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>预测</h3>
-<p>使用神经网络去遍历所有可能的对称平面法向，然后检验是否是合法的对称性。</p>
+<h3 id="prediction">
+<a class="anchor" href="#prediction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prediction</h3>
+
+<p>Use a neural network to traverse all possible symmetry plane normals, then verify if they are valid symmetries.</p>
 
 <h3 id="pipeline">
 <a class="anchor" href="#pipeline" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pipeline</h3>
@@ -254,19 +256,20 @@
     Figure 1
 </div>
 
-<p>对于输入的图片，首先计算2D特征图，然后生成一堆候选的对称平面法向，对于每个候选的法向 \(\mathrm{w}\)，把2D特征图warp过去，构建一个3D的代价体进行photo-consistency的匹配，最后，cost volume网络将代价体转换为置信值，将具有最大置信度的 \(\mathrm{w}\) 作为最终的预测对称平面。</p>
+<p>For the input image, first compute the 2D feature map, then generate a set of candidate symmetry plane normals. For each candidate normal \(\mathrm{w}\), warp the 2D feature map, construct a 3D cost volume for photo-consistency matching, and finally, the cost volume network converts the cost volume into confidence values, taking the \(\mathrm{w}\) with the highest confidence as the final predicted symmetry plane.</p>
 
-<p>那么，如何去生成候选的对称平面法向呢？因为 \(\mathrm{w}\) 的定义域 \(\mathbb{R}^3\) 是连续的，如果使用暴力采样，将会使得复杂度极高。所以该文采用了coarse-to-fine的策略，先均匀采样，然后校验得到置信度最大的 \(\mathrm{w}^\star\)，之后将采样范围缩小到 \(\mathrm{w}^\star\) 附近，再次迭代，直到能够达到<strong>the desired accuracy</strong>。</p>
+<p>How to generate candidate symmetry plane normals? Since the domain of \(\mathrm{w}\), \(\mathbb{R}^3\), is continuous, brute-force sampling would be computationally expensive. Therefore, a coarse-to-fine strategy is adopted: first, sample uniformly, then find the \(\mathrm{w}^\star\) with the highest confidence, narrow the sampling range around \(\mathrm{w}^\star\), and iterate until the desired accuracy is achieved.</p>
 
-<p>特征提取器选择ResNet的变种，对于采样得到的 \(\mathrm{w}_i\) 来说，得到其transformation矩阵 \(\mathrm{C}(\mathrm{w}_i)\)。对于图像中的每一个像素点 \((x, y)\) 通过对称得到其对称点 \((x^{'}, y^{'})\)，将这两个像素点的特征concat在一起作为feature warping，得到代价体，之后代价体送入cost volume network（也就是一系列的3D convolution + max-pool + sigmoid）得到 \(\mathrm{w}_i\) 对应的置信度 \(\hat{l}_i\)。</p>
+<p>The feature extractor is a variant of ResNet. For each sampled \(\mathrm{w}\_i\), obtain its transformation matrix \(\mathrm{C}(\mathrm{w}\_i)\). For each pixel \((x, y)\) in the image, obtain its symmetric point \((x^{'}, y^{'})\), concatenate the features of these two pixels as feature warping, obtain the cost volume, and then feed the cost volume into the cost volume network (i.e., a series of 3D convolutions + max-pool + sigmoid) to get the confidence \(\hat{l}\_i\) for \(\mathrm{w}\_i\).</p>
 
-<h3 id="训练">
-<a class="anchor" href="#%E8%AE%AD%E7%BB%83" aria-hidden="true"><span class="octicon octicon-link"></span></a>训练</h3>
-<p>在coarse-to-fine的每一level而言，分别在ground truth: \(\mathrm{w}\) 周边进行采样，对采样得到的 \(\hat{\mathrm{w}}\)，其标签为：</p>
+<h3 id="training">
+<a class="anchor" href="#training" aria-hidden="true"><span class="octicon octicon-link"></span></a>Training</h3>
+
+<p>At each level of the coarse-to-fine process, sample around the ground truth \(\mathrm{w}\). For each sampled \(\hat{\mathrm{w}}\), its label is:</p>
 
 \[l_i = 1[\mathrm{arccos}(\vert &lt;\mathrm{w}, \hat{\mathrm{w}}&gt; \vert) \lt \triangle_i]\]
 
-<p>损失函数为：</p>
+<p>The loss function is:</p>
 
 \[L_{\mathrm{cls}} = \sum_i \mathrm{BCE}(\hat{l_i}, l_i)\]
 
@@ -276,7 +279,7 @@
 <h3 id="pose-recovery">
 <a class="anchor" href="#pose-recovery" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pose Recovery</h3>
 
-<p>不太明白这里的2 DoFs</p>
+<p>Not quite sure about the 2 DoFs here.</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">

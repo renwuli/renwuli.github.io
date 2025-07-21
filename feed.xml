@@ -1,47 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://renwuli.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://renwuli.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-07-21T10:58:41+00:00</updated><id>https://renwuli.github.io/feed.xml</id><title type="html">Ren-Wu Li</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-</subtitle><entry><title type="html">Wheel Preintegration</title><link href="https://renwuli.github.io/blog/2022/Wheel-Preintegration/" rel="alternate" type="text/html" title="Wheel Preintegration" /><published>2022-11-11T20:00:00+00:00</published><updated>2022-11-11T20:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/Wheel-Preintegration</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/Wheel-Preintegration/"><![CDATA[<h2 id="轮速计噪声模型">轮速计噪声模型</h2>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://renwuli.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://renwuli.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-07-21T11:47:24+00:00</updated><id>https://renwuli.github.io/feed.xml</id><title type="html">Ren-Wu Li</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+</subtitle><entry><title type="html">Wheel Preintegration</title><link href="https://renwuli.github.io/blog/2022/Wheel-Preintegration/" rel="alternate" type="text/html" title="Wheel Preintegration" /><published>2022-11-11T20:00:00+00:00</published><updated>2022-11-11T20:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/Wheel-Preintegration</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/Wheel-Preintegration/"><![CDATA[<h2 id="wheel-encoder-noise-model">Wheel Encoder Noise Model</h2>
 
 \[_{O}\widetilde{\mathbf{u}}(t) = _{O}\mathbf{u}(t) + \mathbf{\eta}^{u}(t)\]
 
-<h2 id="轮速计运动模型">轮速计运动模型</h2>
+<h2 id="wheel-encoder-motion-model">Wheel Encoder Motion Model</h2>
 
 \[_{W} \dot{\mathbf{o}} = _{W}\mathbf{u}\]
 
 \[_{W} \dot{\mathbf{o}} = \mathrm{R}_{WB} \cdot \mathrm{R}^{B}_{O} \cdot _{O} \mathbf{u}\]
 
-<h2 id="相邻时刻的轮速测量模型">相邻时刻的轮速测量模型</h2>
+<h2 id="wheel-measurement-model-between-consecutive-timesteps">Wheel Measurement Model Between Consecutive Timesteps</h2>
 
 \[_{W}\mathbf{o}(t + \triangle t) = _{W}\mathbf{o}(t) + _{W}\mathbf{u} (t) \triangle t\]
 
-<p>将 \(\mathrm{R}_{WB}\) 记作 \(\mathrm{R}\)，默认位移 \(\mathbf{o}\) 和速度 \(\mathbf{v}\) 为世界坐标系下的量，则：</p>
+<p>Let \(\mathrm{R}\_{WB}\) be denoted as \(\mathrm{R}\), with default position \(\mathbf{o}\) and velocity \(\mathbf{v}\) in world frame:</p>
 
 \[\mathbf{o}(t + \triangle t) = \mathbf{o}(t) + \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \cdot \mathbf{u} \triangle t\]
 
-<p>考虑噪声模型，有：</p>
+<p>Considering noise model:</p>
 
-\[\mathbf{o}(t + \triangle t) = \mathbf{o}(t) + \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \cdot \left( 
+\[\mathbf{o}(t + \triangle t) = \mathbf{o}(t) + \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \cdot \left(
   \tilde{\mathbf{u}}(t) - \mathbf{\eta}^{ud}(t)
  \right) \triangle t\]
 
-<h2 id="关键帧之间的轮速测量模型">关键帧之间的轮速测量模型</h2>
+<h2 id="wheel-measurement-model-between-keyframes">Wheel Measurement Model Between Keyframes</h2>
 
-\[\mathbf{o}_{j} = \mathbf{o}_{i} + \sum_{k=i}^{j-1} \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \left( 
+\[\mathbf{o}_{j} = \mathbf{o}_{i} + \sum_{k=i}^{j-1} \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \left(
   \tilde{\mathbf{u}}_{k} - \mathbf{\eta}^{ud}_{k}
  \right) \triangle t\]
 
-<h2 id="预积分">预积分</h2>
+<h2 id="preintegration">Preintegration</h2>
 
-<p>将第 \(i\) 时刻的状态分离出来：</p>
+<p>Factor out state at time \(i\):</p>
 
-\[\mathbf{o}_{j} - \mathbf{o}_{i} = \sum_{k=i}^{j-1} \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \left( 
+\[\mathbf{o}_{j} - \mathbf{o}_{i} = \sum_{k=i}^{j-1} \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \left(
   \tilde{\mathbf{u}}_{k} - \mathbf{\eta}^{ud}_{k}
  \right) \triangle t\]
 
-<p>并转换到第 \(i\) 时刻的IMU坐标系，得：</p>
+<p>Transform to IMU frame at time \(i\):</p>
 
 \[\begin{align*}
 \triangle \mathbf{o}_{ij} &amp;= \mathrm{R}_{i}^{T} \left( \mathbf{o}_{j} - \mathbf{o}_{i} \right) \\
-&amp;= \sum_{k=i}^{j-1} \triangle  \mathrm{R}_{ik} \cdot \mathrm{R}^{B}_{O} \left( 
+&amp;= \sum_{k=i}^{j-1} \triangle  \mathrm{R}_{ik} \cdot \mathrm{R}^{B}_{O} \left(
   \tilde{\mathbf{u}}_{k} - \mathbf{\eta}^{ud}_{k}
  \right) \triangle t
 \end{align*}\]
@@ -50,72 +50,72 @@
 \triangle \mathbf{o}_{ij} = \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B}
 }\]
 
-<h3 id="分离噪声">分离噪声</h3>
+<h3 id="noise-separation">Noise Separation</h3>
 
-<p>将上述预积分公式中得噪声分离出来：</p>
+<p>Separate noise from preintegration:</p>
 
 \[\begin{align*}
-  \triangle \mathbf{o}_{ij} &amp;= \sum_{k=i}^{j-1} \triangle \mathrm{R}_{ik} \cdot \mathrm{R}^{B}_{O} \left( 
+  \triangle \mathbf{o}_{ij} &amp;= \sum_{k=i}^{j-1} \triangle \mathrm{R}_{ik} \cdot \mathrm{R}^{B}_{O} \left(
   \tilde{\mathbf{u}}_{k} - \mathbf{\eta}^{ud}_{k}
  \right) \triangle t \\
-&amp;= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} \left( 
+&amp;= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} \left(
   \mathbf{I} - \delta\phi_{ik}^{\wedge} \right) \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t
    - \triangle  \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \mathbf{\eta}_{k}^{ud} \triangle t \\
-&amp;= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t + \sum_{k=i}^{j-1} \left[ 
-  \triangle \tilde{\mathrm{R}}_{ik} \left( 
+&amp;= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t + \sum_{k=i}^{j-1} \left[
+  \triangle \tilde{\mathrm{R}}_{ik} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k}
    \right)^{\wedge} \delta \phi_{ik} \triangle t - \triangle \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \mathbf{\eta}_{k}^{ud} \triangle t
- \right] \\ 
+ \right] \\
 &amp;= \triangle \tilde{\mathbf{o}}_{ij} - \delta \mathbf{o}_{ij}
 \end{align*}\]
 
-<p>其中：</p>
+<p>Where:</p>
 
 \[\begin{align*}
 \triangle \tilde{\mathbf{o}}_{ij} &amp;= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t \\
 &amp;= \triangle \mathbf{o}_{ij} + \delta \mathbf{o}_{ij}
 \end{align*}\]
 
-<h3 id="噪声传播">噪声传播</h3>
+<h3 id="noise-propagation">Noise Propagation</h3>
 
 \[\begin{align*}
- \delta \mathbf{o}_{ij} &amp;= \sum_{k=i}^{j-1} \left[ 
-  -\triangle \tilde{\mathrm{R}}_{ik} \left( 
+ \delta \mathbf{o}_{ij} &amp;= \sum_{k=i}^{j-1} \left[
+  -\triangle \tilde{\mathrm{R}}_{ik} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k}
    \right)^{\wedge} \delta \phi_{ik} \triangle t + \triangle \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \mathbf{\eta}_{k}^{ud} \triangle t
  \right] \\
 &amp;= \sum_{k=i}^{j-2} \left[
-  -\triangle \tilde{\mathrm{R}}_{ik} \left( 
+  -\triangle \tilde{\mathrm{R}}_{ik} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k}
    \right)^{\wedge} \delta \phi_{ik} \triangle t + \triangle \tilde{\mathrm{R}}_{ik} \mathbf{\eta}_{k}^{ud} \mathrm{R}^{B}_{O} \triangle t
  \right] \\
-&amp;- \triangle \tilde{\mathrm{R}}_{ij-1} \left( 
+&amp;- \triangle \tilde{\mathrm{R}}_{ij-1} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{j-1}
    \right)^{\wedge} \delta \phi_{ij-1} \triangle t + \triangle \tilde{\mathrm{R}}_{ij-1} \mathrm{R}^{B}_{O} \mathbf{\eta}_{j-1}^{ud} \triangle t \\
-&amp;= \delta \mathbf{o}_{ij-1} - \triangle \tilde{\mathrm{R}}_{ij-1} \left( 
+&amp;= \delta \mathbf{o}_{ij-1} - \triangle \tilde{\mathrm{R}}_{ij-1} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{j-1}
    \right)^{\wedge} \delta \phi_{ij-1} \triangle t + \triangle \tilde{\mathrm{R}}_{ij-1} \mathrm{R}^{B}_{O} \mathbf{\eta}_{j-1}^{ud} \triangle t
 \end{align*}\]
 
-<p>令预积分的噪声向量为:</p>
+<p>Define preintegration noise vector:</p>
 
 \[\delta \mathbf{\eta}_{ik}^{\triangle} = \left[ \delta \mathbf{\phi}_{ik}, \delta \mathbf{v}_{ik}, \delta \mathbf{p}_{ik}, \delta \mathbf{o}_{ik} \right] \in \mathbb{R}^{12}\]
 
-<p>传感器噪声为：</p>
+<p>Sensor noise:</p>
 
 \[\mathbf{\eta}_{k}^{d} = \left[ \mathbf{\eta}_{k}^{gd}, \mathbf{\eta}_{k}^{ad}, \mathbf{\eta}_{k}^{ud} \right] \in \mathbb{R}^{3 \times 3} =  \in \mathbb{R}^{9}\]
 
-<p>则预积分噪声的递推公式为：</p>
+<p>Preintegration noise recursion:</p>
 
 \[\delta \mathbf{\eta}_{ij}^{\triangle} = \mathbf{A}_{j-1} \delta \mathbf{\eta}_{ij-1}^{\triangle} + \mathbf{B}_{j-1} \mathbf{\eta}_{j-1}^{d}\]
 
-<p>则：</p>
+<p>Where:</p>
 
 \[\mathbf{A}_{j-1} = \begin{bmatrix}
   \triangle \tilde{\mathrm{R}}_{j-1 j}^{T} &amp; 0 &amp; 0 &amp; 0 \\
   -\triangle \tilde{\mathrm{R}}_{i j-1} \left( \tilde{\mathbf{a}}_{j-1} - \mathbf{b}_{i}^{a} \right)^{\wedge} \triangle t &amp; \mathbf{I} &amp; 0 &amp; 0 \\
   -\frac{1}{2} \triangle \tilde{\mathrm{R}}_{i j-1} \left( \tilde{\mathbf{a}}_{j-1} - \mathbf{b}_{i}^{a} \right)^{\wedge} \triangle t^{2} &amp; \triangle t \mathbf{I} &amp; 0 &amp; 0 \\
-  -\triangle \tilde{\mathrm{R}}_{ij-1} \left( 
+  -\triangle \tilde{\mathrm{R}}_{ij-1} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{j-1}
    \right)^{\wedge} \triangle t &amp; 0 &amp; 0 &amp; 0
 \end{bmatrix}  \in \mathbb{R}^{12 \times 12}\]
@@ -127,63 +127,63 @@
   0 &amp; 0 &amp; \triangle \tilde{\mathrm{R}}_{i j-1} \mathrm{R}^{B}_{O} \triangle t
 \end{bmatrix}  \in \mathbb{R}^{12 \times 9}\]
 
-<p>协方差矩阵递推公式为：</p>
+<p>Covariance matrix recursion:</p>
 
 \[\mathbf{\Sigma}_{ij} = \mathbf{A}_{j-1} \mathbf{\Sigma}_{ij-1} \mathbf{A}_{j-1}^{T} + \mathbf{B}_{j-1} \mathbf{\Sigma}_{\mathbf{\eta}}\mathbf{B}_{j-1}^{T}  \in \mathbb{R}^{12 \times 12}\]
 
 \[\mathbf{\Sigma}_{\mathbf{\eta}} \in \mathbb{R}^{9 \times 9}\]
 
-<h3 id="偏置更新">偏置更新</h3>
+<h3 id="bias-update">Bias Update</h3>
 
 \[\triangle \tilde{\mathbf{o}}_{ij} \left( \mathbf{b}_{i}^{g} \right) \simeq \triangle \tilde{\mathbf{o}}_{ij} \left( \bar{\mathbf{b}}_{i}^{g} \right) + \frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}} \delta \mathbf{b}_{i}^{g}\]
 
-<p>其中：</p>
+<p>Where:</p>
 
 \[\bar{\mathbf{o}}_{ij} = \tilde{\mathbf{o}}_{ij} \left( \bar{\mathbf{b}}_{i} \right)\]
 
-<p>当偏置进行更新：</p>
+<p>When bias updates:</p>
 
 \[\hat{\mathbf{b}}_{i} \leftarrow \bar{\mathbf{b}}_{i} + \delta \mathbf{b}_{i}\]
 
-<p>相应的预积分进行更新：</p>
+<p>Corresponding preintegration update:</p>
 
 \[\begin{align*}
 \tilde{\mathbf{o}}_{ij} (\hat{\mathbf{b}}_{i}) &amp;= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} (\hat{\mathbf{b}}_{i}) \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t \\
 &amp;= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \mathbf{Exp} \left( \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g} \right) \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t \\
-&amp;= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( 
-  \mathbf{I} + \left( 
+&amp;= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left(
+  \mathbf{I} + \left(
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}
    \right)^{\wedge}
  \right) \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t \\
-&amp;= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t + \sum_{k=i}^{j-1} \triangle  \bar{\mathrm{R}}_{ik} \left( 
+&amp;= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t + \sum_{k=i}^{j-1} \triangle  \bar{\mathrm{R}}_{ik} \left(
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}
    \right)^{\wedge} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t \\
-&amp;= \triangle \bar{\mathbf{o}}_{ij} + \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( 
+&amp;= \triangle \bar{\mathbf{o}}_{ij} + \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left(
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}
    \right)^{\wedge} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right) \triangle t \\
-&amp;= \triangle \bar{\mathbf{o}}_{ij} - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge} \left( 
+&amp;= \triangle \bar{\mathbf{o}}_{ij} - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge} \left(
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}
    \right) \triangle t \\
-&amp;= \triangle \bar{\mathbf{o}}_{ij} - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge} 
+&amp;= \triangle \bar{\mathbf{o}}_{ij} - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge}
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \triangle t  \cdot \delta \mathbf{b}_{i}^{g} \\
 &amp;= {\color{red} \triangle \bar{\mathbf{o}}_{ij} + \frac{\partial{\triangle \bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}}
 \end{align*}\]
 
-<p>所以：</p>
+<p>Thus:</p>
 
-\[\frac{\partial{\triangle \bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}^{g}}} = - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge} 
+\[\frac{\partial{\triangle \bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}^{g}}} = - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge}
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \triangle t\]
 
-<h3 id="预积分残差项">预积分残差项</h3>
+<h3 id="preintegration-residual">Preintegration Residual</h3>
 
 \[\begin{align*}
 \mathbf{r}_{\triangle \mathbf{o}_{ij}} &amp;= \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} \\
 &amp;- \left( \triangle \tilde{\mathbf{o}}_{ij} \left( \bar{\mathbf{b}}_{i}^{g} \right) + \frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}} \delta \mathbf{b}_{i}^{g} \right)  \\
 &amp;= \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} \\
-&amp;- \left( \triangle \bar{\mathbf{o}}_{ij} + \frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}} \delta \mathbf{b}_{i}^{g} \right) 
+&amp;- \left( \triangle \bar{\mathbf{o}}_{ij} + \frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}} \delta \mathbf{b}_{i}^{g} \right)
 \end{align*}\]
 
-<h4 id="雅各比求解">雅各比求解</h4>
+<h4 id="jacobian-derivation">Jacobian Derivation</h4>
 
 \[\begin{array}{l}
 \mathrm{R}_{i} \leftarrow \mathrm{R}_{i} \operatorname{Exp}\left(\delta \boldsymbol{\phi}_{i}\right), \quad \mathrm{R}_{j} \leftarrow \mathrm{R}_{j} \operatorname{Exp}\left(\delta \boldsymbol{\phi}_{j}\right) \\[2mm]
@@ -193,7 +193,7 @@
 \end{array}\]
 
 <ul>
-  <li>对 \(\delta \mathbf{p}_{i}\)</li>
+  <li>W.r.t \(\delta \mathbf{p}\_{i}\)</li>
 </ul>
 
 \[\begin{align*}
@@ -202,12 +202,12 @@
 &amp;= \mathbf{r}_{\triangle \mathbf{o}_{ij}} (\mathbf{p}_{i}) + (-\mathbf{I}_{3 \times 1}) \delta \mathbf{p}_{i}
 \end{align*}\]
 
-<p>所以：</p>
+<p>Thus:</p>
 
 \[\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{p}_{i}}} = -\mathbf{I}_{3 \times 1}\]
 
 <ul>
-  <li>对 \(\delta \mathbf{p}_{j}\)</li>
+  <li>W.r.t \(\delta \mathbf{p}\_{j}\)</li>
 </ul>
 
 \[\begin{align*}
@@ -216,44 +216,44 @@
 &amp;= \mathbf{r}_{\triangle \mathbf{o}_{ij}} (\mathbf{p}_{i}) + (\mathrm{R}_{i}^{T} \mathrm{R}_{j}) \delta \mathbf{p}_{i}
 \end{align*}\]
 
-<p>所以：</p>
+<p>Thus:</p>
 
 \[\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{p}_{i}}} = \mathrm{R}_{i}^{T} \mathrm{R}_{j}\]
 
 <ul>
-  <li>对 \(\delta \mathbf{v}_{i}\)</li>
+  <li>W.r.t \(\delta \mathbf{v}\_{i}\)</li>
 </ul>
 
 \[\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{v}_{i}}} = 0\]
 
 <ul>
-  <li>对 \(\delta \mathbf{v}_{j}\)</li>
+  <li>W.r.t \(\delta \mathbf{v}\_{j}\)</li>
 </ul>
 
 \[\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{v}_{j}}} = 0\]
 
 <ul>
-  <li>对 \(\delta \mathbf{\phi}_{i}\)</li>
+  <li>W.r.t \(\delta \mathbf{\phi}\_{i}\)</li>
 </ul>
 
 \[\begin{align*}
 \mathbf{r}_{\triangle \mathbf{o}_{ij}} \left( \mathrm{R}_{i} \mathbf{Exp} (\delta \phi_{i}) \right) &amp;= \left[ \mathrm{R}_{i} \mathbf{Exp} (\delta \phi_{i}) \right]^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \left[ \mathrm{R}_{i} \mathbf{Exp} (\delta \phi_{i}) \right]^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} + C \\[2mm]
 &amp;= \left( \mathbf{I} - \delta \phi_{i}^{\wedge} \right) \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \left( \mathbf{I} - \delta \phi_{i}^{\wedge} \right) \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} + C \\[2mm]
 &amp;= \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} + C \\
-&amp;+ \left( -\delta \phi_{i}^{\wedge} \right) \mathrm{R}_{i}^{T} \left( 
+&amp;+ \left( -\delta \phi_{i}^{\wedge} \right) \mathrm{R}_{i}^{T} \left(
    \mathbf{p}_{j} - \mathbf{p}_{i} + \mathrm{R}_{j} \mathbf{t}_{O}^{B}
  \right) \\[2mm]
-&amp;= \mathbf{r}_{\triangle \mathbf{o}_{ij}} + \left[ \mathrm{R}_{i}^{T} \left( 
+&amp;= \mathbf{r}_{\triangle \mathbf{o}_{ij}} + \left[ \mathrm{R}_{i}^{T} \left(
    \mathbf{p}_{j} - \mathbf{p}_{i} + \mathrm{R}_{j} \mathbf{t}_{O}^{B}
  \right) \right]^{\wedge} \delta \phi_{i}
 \end{align*}\]
 
-<p>注：</p>
+<p>Note:</p>
 
 \[\mathbf{Exp} (\phi)^{T} \simeq (\mathbf{I} + \phi^{\wedge})^{T} = \mathbf{I} + (\phi ^{\wedge})^{T} = \mathbf{I} - \phi^{\wedge}\]
 
 <ul>
-  <li>对 \(\delta \mathbf{\phi}_{j}\)</li>
+  <li>W.r.t \(\delta \mathbf{\phi}\_{j}\)</li>
 </ul>
 
 \[\begin{align*}
@@ -263,33 +263,33 @@
 &amp;= \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} + C - \mathrm{R}_{i}^{T} \mathrm{R}_{j} (\mathbf{t}_{O}^{B})^{\wedge} \delta \phi_{j}
 \end{align*}\]
 
-<p>所以：</p>
+<p>Thus:</p>
 
 \[\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \phi_{j}}} = - \mathrm{R}_{i}^{T} \mathrm{R}_{j} (\mathbf{t}_{O}^{B})^{\wedge}\]
 
 <ul>
-  <li>对 \(\tilde{\delta} \mathbf{b}_{i}^{g}\)</li>
+  <li>W.r.t \(\tilde{\delta} \mathbf{b}\_{i}^{g}\)</li>
 </ul>
 
 \[\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\tilde{\delta} \mathbf{b}_{i}^{g}}} = -\frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}}\]
 
 <ul>
-  <li>对 \(\tilde{\delta} \mathbf{b}_{i}^{a}\)</li>
+  <li>W.r.t \(\tilde{\delta} \mathbf{b}\_{i}^{a}\)</li>
 </ul>
 
-\[\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\tilde{\delta} \mathbf{b}_{i}^{a}}} = 0\]]]></content><author><name></name></author><category term="SLAM" /><category term="IMU," /><category term="Wheel," /><category term="Preintegration," /><category term="VINS" /><summary type="html"><![CDATA[轮速计噪声模型]]></summary></entry><entry><title type="html">VINS-Wheel</title><link href="https://renwuli.github.io/blog/2022/VINS-Wheel/" rel="alternate" type="text/html" title="VINS-Wheel" /><published>2022-10-10T12:00:00+00:00</published><updated>2022-10-10T12:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/VINS-Wheel</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/VINS-Wheel/"><![CDATA[<p>Paper: Visual-Inertial Odometry Tightly Coupled with Wheel Encoder Adopting Robust Initialization and Online Extrinsic Calibration</p>
+\[\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\tilde{\delta} \mathbf{b}_{i}^{a}}} = 0\]]]></content><author><name></name></author><category term="SLAM" /><category term="IMU," /><category term="Wheel," /><category term="Preintegration," /><category term="VINS" /><summary type="html"><![CDATA[Wheel Encoder Noise Model]]></summary></entry><entry><title type="html">VINS-Wheel</title><link href="https://renwuli.github.io/blog/2022/VINS-Wheel/" rel="alternate" type="text/html" title="VINS-Wheel" /><published>2022-10-10T12:00:00+00:00</published><updated>2022-10-10T12:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/VINS-Wheel</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/VINS-Wheel/"><![CDATA[<p>Paper: Visual-Inertial Odometry Tightly Coupled with Wheel Encoder Adopting Robust Initialization and Online Extrinsic Calibration</p>
 
 <p>PDF: <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8967607">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8967607</a></p>
 
-<h2 id="主要贡献">主要贡献：</h2>
+<h2 id="main-contributions">Main Contributions:</h2>
 <ul>
-  <li>在预积分阶段融合IMU和轮速计，4-DoF非线性优化得到更加准确的尺度</li>
-  <li>IMU-Camera-轮速计的联合初始化方法</li>
-  <li>在线标定IMU-轮速计外参</li>
+  <li>Fusion of IMU and wheel encoder at the preintegration stage, achieving more accurate scale through 4-DoF nonlinear optimization</li>
+  <li>Joint initialization method for IMU-Camera-Wheel encoder</li>
+  <li>Online calibration of IMU-Wheel encoder extrinsic parameters</li>
 </ul>
 
-<h2 id="硬件设置">硬件设置：</h2>
-<p>后驱四轮车（当前面两个轮子旋转时，后面两个轮子的朝向不改变），轮速计安装在后左车轮。左后轮的速度方向始终朝向y轴。</p>
+<h2 id="hardware-setup">Hardware Setup:</h2>
+<p>Rear-wheel-drive four-wheeled vehicle (rear wheels maintain fixed orientation when front wheels rotate), wheel encoder installed on rear-left wheel. Velocity direction of left rear wheel always aligns with the y-axis.</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -315,13 +315,13 @@
     Figure 1
 </div>
 
-<h2 id="流程">流程</h2>
-<p>初始化 → 传感器坐标系与重力方向对齐，创建初始地图 → IMU、轮速计预积分，特征点提取与跟踪 → 滑动窗口非线性优化 → 当前帧的pvq计算得到</p>
+<h2 id="workflow">Workflow</h2>
+<p>Initialization → Align sensor coordinate systems with gravity direction, create initial map → IMU and wheel encoder preintegration, feature extraction and tracking → Sliding window nonlinear optimization → Compute current frame’s pvq</p>
 
-<p>当初始化结束之后，外参便写死不再改变</p>
+<p>After initialization completes, extrinsic parameters are fixed and no longer updated.</p>
 
-<h3 id="a-预积分">A. 预积分</h3>
-<p>其实是VINS-MONO预积分公式的扩展（加入轮速计）</p>
+<h3 id="a-preintegration">A. Preintegration</h3>
+<p>Extension of VINS-MONO preintegration formulas (incorporating wheel encoder)</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -347,13 +347,13 @@
     Figure 2
 </div>
 
-<p>在初始阶段，\(\hat{\alpha}_i^i, \hat{\beta}^i_i, \hat{\eta}^i_i\) 均为0，而 \(\hat{\gamma}^i_i\) 为单位四元数。</p>
+<p>At initial stage, \(\hat{\alpha}_i^i, \hat{\beta}^i_i, \hat{\eta}^i_i\) are all zero, while \(\hat{\gamma}^i_i\) is the identity quaternion.</p>
 
 <blockquote>
   <p>Joan Sola. Quaternion kinematics for the error-state kalman filter. arXiv preprint arXiv:1711.02508, 2017.</p>
 </blockquote>
 
-<p>参考上文，使用扰动方式计算出运动学公式，推导出协方差矩阵：</p>
+<p>Using perturbation methods to derive kinematic equations and compute covariance matrix:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -383,7 +383,7 @@
 
 \[\Sigma_{i, l+1} = B_{i,l}QB_{i,l}^T+A_{i,l}\Sigma_{i,l}A_{i,l}^T\]
 
-<p>和VINS-MONO的对比下来看一下：</p>
+<p>Comparison with VINS-MONO:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -409,18 +409,17 @@
     Figure 4
 </div>
 
-<p>这里面也讨论了一下VINS-MONO初始化的问题：</p>
+<p>Discusses VINS-MONO initialization limitations:</p>
 <blockquote>
-  <p>The initailization procedure of VINS is well-designed, but prone to error for a car with a monocular camera facing forward moving at approximately constant velocity.</p>
+  <p>The initialization procedure of VINS is well-designed, but prone to error for a car with a monocular camera facing forward moving at approximately constant velocity.</p>
 </blockquote>
 
-<p>也就是说，如果车子以近似恒速的状态向前运动，VINS-MONO往往会出错。</p>
+<p>This indicates that when a vehicle moves forward at near-constant velocity, VINS-MONO often fails.</p>
 
-<h3 id="b-初始化">B. 初始化</h3>
+<h3 id="b-initialization">B. Initialization</h3>
 
-<h4 id="陀螺仪bias">陀螺仪bias</h4>
-
-<p>先像VINS-MONO一样做SFM，得到up-to-scale的视觉structure，然后与IMU进行手眼标定，通过旋转约束最小二乘计算得到陀螺仪的bias：</p>
+<h4 id="gyroscope-bias">Gyroscope Bias</h4>
+<p>First perform SFM like VINS-MONO to obtain up-to-scale visual structure, then calibrate with IMU using rotation constraints via least squares to compute gyroscope bias:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -446,9 +445,9 @@
     Figure 5
 </div>
 
-<p>得到新的陀螺仪bias \(\mathrm{b}_w\) 之后，重新预积分，以避免使用不精确的陀螺仪bias引入的累计误差。</p>
+<p>After obtaining new gyroscope bias \(\mathrm{b}_w\), recompute preintegration to avoid accumulated errors from inaccurate bias.</p>
 
-<h4 id="修正重力方向和初始化速度">修正重力方向和初始化速度</h4>
+<h4 id="refine-gravity-direction-and-initialize-velocity">Refine Gravity Direction and Initialize Velocity</h4>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -474,7 +473,7 @@
     Figure 6
 </div>
 
-<p>依然是和VINS-MONO类似的方程：</p>
+<p>Equations similar to VINS-MONO:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -500,18 +499,18 @@
     Figure 7
 </div>
 
-<p>因为轮速计的$XY$平面在定义时是和car的机壳水平的，所以可以近似地认为轮速计的 \(Z\) 方向是和重力方向一致的，将其转到body-imu坐标系下得到重力的初始值：</p>
+<p>Since wheel encoder’s XY plane is defined level with car body, its Z-axis approximately aligns with gravity direction. Transform to body-IMU frame for initial gravity:</p>
 
 \[g_0^{b0} = R_o^b[0 ~ 0 ~ g]^T\]
 
-<p>之后进行重力方向的修正（重力的大小已知），和VINS-MONO类似，将重力方向在切平面处过参数化，引入两个新的切向量，进行优化：</p>
+<p>Refine gravity direction (known magnitude) similar to VINS-MONO by over-parameterizing in tangent plane with two new tangent vectors:</p>
 
 \[g^{b0} = g_0^{b0}+B\triangle g\]
 
-<p>其中，$B$即为这两个切向量的基。</p>
+<p>where $B$ is the basis formed by these tangent vectors.</p>
 
-<h3 id="c-非线性优化">C. 非线性优化</h3>
-<p>cost function由三个部分组成：边缘化的term，重投影误差的term和IMU-轮速计的term。</p>
+<h3 id="c-nonlinear-optimization">C. Nonlinear Optimization</h3>
+<p>Cost function comprises three terms: marginalization term, reprojection error term, and IMU-wheel encoder term.</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -537,7 +536,7 @@
     Figure 8
 </div>
 
-<p>其中 \(e_s^k\) 是IMU-轮速计的residual，是我们重点关注的：</p>
+<p>The term \(e_s^k\) (IMU-wheel encoder residual) is our focus:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -563,18 +562,18 @@
     Figure 9
 </div>
 
-<p>上式对 \(b_{a_k}, b_{w_k}\) 和 \(R_o^b\) 求导，再求解到最优解。</p>
+<p>Differentiate w.r.t \(b_{a_k}, b_{w_k}\) and \(R_o^b\), then solve for optimal solution.</p>
 
-<h3 id="d-在线外参标定">D. 在线外参标定</h3>
-<p>分为两个外参：camera-imu外参和imu-odemetry外参。但是作者也说了，当整个系统没有良好的约束时（比如缺乏旋转、IMU没有良好的激励），动态地调整外参可能会导致系统运行失败。</p>
+<h3 id="d-online-extrinsic-calibration">D. Online Extrinsic Calibration</h3>
+<p>Two extrinsics: camera-IMU and IMU-odometry. Authors note that dynamic extrinsic adjustment may fail under poor constraints (e.g., lack of rotation, insufficient IMU excitation).</p>
 
 <blockquote>
   <p>Consider that one cannot distinguish the direction of local gravity from that of the accelerometer bias when there is no rotational motion, which is pointed out in [6]. That is to say, the lack of constraints will result in the unstable estimation of accelerometer bias. Conversely, the convergence of accelerometer bias indicates that the system has become well-constrained.</p>
 </blockquote>
 
-<p><strong>当加速度计的bias很好地收敛，那就意味着整个系统有良好的约束。</strong></p>
+<p><strong>Convergence of accelerometer bias indicates sufficient system constraints.</strong></p>
 
-<h2 id="参考文献">参考文献</h2>
+<h2 id="references">References</h2>
 <p>[1] Tong Qin, Peiliang Li, and Shaojie Shen. Vins-mono: A robust and versatile monocular visual-inertial state estimator. IEEE Transactions on Robotics, 34(4):1004–1020, 2018.</p>
 
 <p>[2] Meixiang Quan, Songhao Piao, Minglang Tan, and Shi-Sheng Huang. Tightly-coupled monocular visual-odometric slam using wheels and a mems gyroscope. arXiv preprint arXiv:1804.04854, 2018.</p>
@@ -583,18 +582,18 @@
 
 <p>[4] 轮式编码器与VIO的融合（一）. https://zhuanlan.zhihu.com/p/149484507</p>
 
-<p>[5] 胡占义-中国科学院大学-UCAS. https://people.ucas.ac.cn/~huzhanyi</p>]]></content><author><name></name></author><category term="SLAM" /><category term="IMU," /><category term="Wheel," /><category term="Preintegration," /><category term="VINS" /><summary type="html"><![CDATA[Paper: Visual-Inertial Odometry Tightly Coupled with Wheel Encoder Adopting Robust Initialization and Online Extrinsic Calibration]]></summary></entry><entry><title type="html">IMU Preintegration</title><link href="https://renwuli.github.io/blog/2022/IMU-Preintegration/" rel="alternate" type="text/html" title="IMU Preintegration" /><published>2022-10-01T10:00:00+00:00</published><updated>2022-10-01T10:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/IMU-Preintegration</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/IMU-Preintegration/"><![CDATA[<p>本文基于Foster2016年发表在 <em>IEEE Transactions on Robotics</em> 上的一篇文章：<em>On-Manifold Preintegration for Real-Time Visual-Inertial Odometry</em>。</p>
+<p>[5] 胡占义-中国科学院大学-UCAS. https://people.ucas.ac.cn/~huzhanyi</p>]]></content><author><name></name></author><category term="SLAM" /><category term="IMU," /><category term="Wheel," /><category term="Preintegration," /><category term="VINS" /><summary type="html"><![CDATA[Paper: Visual-Inertial Odometry Tightly Coupled with Wheel Encoder Adopting Robust Initialization and Online Extrinsic Calibration]]></summary></entry><entry><title type="html">IMU Preintegration</title><link href="https://renwuli.github.io/blog/2022/IMU-Preintegration/" rel="alternate" type="text/html" title="IMU Preintegration" /><published>2022-10-01T10:00:00+00:00</published><updated>2022-10-01T10:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/IMU-Preintegration</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/IMU-Preintegration/"><![CDATA[<p>This article is based on Foster’s 2016 paper <em>On-Manifold Preintegration for Real-Time Visual-Inertial Odometry</em> published in <em>IEEE Transactions on Robotics</em>.</p>
 
-<h2 id="imu噪声模型">IMU噪声模型</h2>
-<p>6自由度的IMU有三轴加速度和三轴角速度。</p>
+<h2 id="imu-noise-model">IMU Noise Model</h2>
+<p>A 6-DOF IMU measures three-axis acceleration and three-axis angular velocity.</p>
 
 \[_{B}\widetilde{\omega}_{WB}(t) = _{B}\omega_{WB}(t) + \mathrm{b}^{g}(t) + \mathrm{\eta}^{g}(t)\]
 
 \[_{B}\widetilde{a}(t) = \mathrm{R}_{WB}^{T}(t)(_{W}\mathrm{a}(t) - _{W}\mathrm{g}) + \mathrm{b}^{a}(t) + \mathrm{\eta}^{a}(t)\]
 
-<p>以上分别为IMU坐标系下的角速度和加速度，IMU系的加速度为世界坐标系下的加速度去除重力加速的影响再转到IMU坐标系，上面的表达都忽略了地球的自转。加速度和角速度都各自受其偏置和随机游走噪声影响，这里认为偏置和随机游走噪声都是关于时间的函数，也就是说偏置和噪声不是一成不变的。</p>
+<p>The equations above represent angular velocity and acceleration in the IMU frame. The IMU-frame acceleration is obtained by removing the gravitational acceleration from the world-frame acceleration and then transforming it to the IMU frame. Earth’s rotation is neglected. Both acceleration and angular velocity are affected by their respective biases and random walk noise, modeled as time-varying quantities.</p>
 
-<h2 id="imu运动模型">IMU运动模型</h2>
+<h2 id="imu-motion-model">IMU Motion Model</h2>
 
 \[\dot{\mathrm{R}}_{WB} = \mathrm{R}_{WB} ~ _{B} \omega_{WB}^{\wedge}\]
 
@@ -602,20 +601,20 @@
 
 \[_{W} \dot{\mathrm{p}} = _{W}\mathrm{v}\]
 
-<h2 id="相邻时刻的rvp递推">相邻时刻的RVP递推</h2>
-<p>IMU自身坐标系到世界坐标系的旋转：</p>
+<h2 id="recursive-propagation-of-r-v-p-between-consecutive-timesteps">Recursive Propagation of R, V, P Between Consecutive Timesteps</h2>
+<p>Rotation from IMU frame to world frame:</p>
 
 \[\mathrm{R}_{WB}(t + \triangle t) = \mathrm{R}_{WB} \mathrm{Exp}\left( \int_{t}^{t + \triangle t} { _{B}\omega_{WB}(\tau) d\tau} \right)\]
 
-<p>世界坐标系下的速度：</p>
+<p>Velocity in world frame:</p>
 
 \[_{W} \mathrm{v}(t + \triangle t) = _{W} \mathrm{v}(t) + \int_{t}^{t + \triangle t} {_{W} \mathrm{a} (\tau) d\tau}\]
 
-<p>世界坐标系下的位移：</p>
+<p>Position in world frame:</p>
 
 \[_{W} \mathrm{p}(t + \triangle t) = _{W} \mathrm{p}(t) + \int_{t}^{t + \triangle t} {_{W} \mathrm{v} (\tau) d\tau} + \iint_{t}^{t + \triangle t} {_{W} \mathrm{a}(\tau) d\tau^{2}}\]
 
-<p>以上是相邻时刻IMU的三个状态的递推，如果我们假设在\([t, t + \triangle t]\)内，世界坐标系下的加速度 \(_{W}\mathrm{a}\) 和IMU坐标系下的角速度 \(_{B}\omega _{WB}\) 保持恒定，那么可以将上述连续形式下的递推改写为如下离散形式：</p>
+<p>The above equations propagate the IMU state (Rotation, Velocity, Position) between consecutive timesteps. Assuming constant world-frame acceleration \(_{W}\mathrm{a}\) and constant IMU-frame angular velocity \(_{B}\omega _{WB}\) over \([t, t + \triangle t]\), we discretize:</p>
 
 \[\mathrm{R}_{WB} (t + \triangle t) = \mathrm{R}_{WB} (t) \mathrm{Exp} \left( _{B}\omega _{WB}(t) \triangle t \right)\]
 
@@ -623,7 +622,7 @@
 
 \[_{W}\mathrm{p}(t + \triangle t) = _{W}\mathrm{p}(t) + _{W}\mathrm{v}(t) \triangle t + \frac{1}{2} _{W}\mathrm{a}(t) \triangle t^{2}\]
 
-<p>将\(\mathrm{R}_{WB}\) 记作\(\mathrm{R}\)，默认速度 \(\mathrm{v}\)、位移 \(\mathrm{p}\)、重力加速度 \(\mathrm{g}\) 和加速度 \(\mathrm{a}\) 为世界坐标系下的量，而角速度 \(\omega\) 为IMU坐标系下的量，则：</p>
+<p>Adopting simplified notation: \(\mathrm{R}_{WB} \rightarrow \mathrm{R}\), with \(\mathrm{v}\) (velocity), \(\mathrm{p}\) (position), \(\mathrm{g}\) (gravity), and \(\mathrm{a}\) (acceleration) in world frame, and \(\omega\) (angular velocity) in IMU frame:</p>
 
 \[\mathrm{R} (t + \triangle t) = \mathrm{R} (t) \mathrm{Exp} \left( \omega (t) \triangle t \right)\]
 
@@ -631,14 +630,14 @@
 
 \[\mathrm{p}(t + \triangle t) = \mathrm{p}(t) + \mathrm{v}(t) \triangle t + \frac{1}{2} \mathrm{a}(t) \triangle t^{2}\]
 
-<p>考虑噪声模型，有：
+<p>Incorporating the noise model:
 \(\mathrm{R} (t + \triangle t) = \mathrm{R} (t) \mathrm{Exp} \left( \left( \tilde{\omega} - \mathrm{b}^{g}(t) - \mathrm{\eta}^{gd}(t) \right)  (t) \triangle t \right)\)</p>
 
-\[\mathrm{v}(t + \triangle t) = \mathrm{v}(t) + \mathrm{g}\triangle t + \left( \tilde{\mathrm{a}}(t) - \mathrm{b}^{a}(t) - \mathrm{\eta}^{ad}(t) \right)  \triangle t\]
+\[\mathrm{v}(t + \triangle t) = \mathrm{v}(t) + \mathrm{g}\triangle t + \mathrm{R}(t)\left( \tilde{\mathrm{a}}(t) - \mathrm{b}^{a}(t) - \mathrm{\eta}^{ad}(t) \right)  \triangle t\]
 
 \[\mathrm{p}(t + \triangle t) = \mathrm{p}(t) + \mathrm{v}(t) \triangle t + \frac{1}{2}  \mathrm{g}\triangle t^{2} + \frac{1}{2} \mathrm{R}(t) \left( \tilde{\mathrm{a}}(t) - \mathrm{b}^{a}(t) - \mathrm{\eta}^{ad}(t) \right) \triangle t^{2}\]
 
-<h2 id="关键帧之间的rvp递推">关键帧之间的RVP递推</h2>
+<h2 id="r-v-p-propagation-between-keyframes">R, V, P Propagation Between Keyframes</h2>
 
 \[\mathrm{R}_{j} = \mathrm{R}_{i} \prod_{k=i}^{j-1} \mathrm{Exp} \left( \left( \tilde{\omega}_{k} - \mathrm{b}_{k}^{g} - \mathrm{\eta}_{k}^{gd} \right) \triangle t \right)\]
 
@@ -646,35 +645,37 @@
 
 \[\mathrm{p}_{j} = \mathrm{p}_{i} + \sum_{k=i}^{j-1} \left[ \mathrm{v}_{k} \triangle t + \frac{1}{2} \mathrm{g} \triangle t^{2} + \frac{1}{2} \mathrm{R}_{k} \left( \tilde{\mathrm{a}}_{k} - \mathrm{b}_{k}^{a} - \mathrm{\eta}_{k}^{ad} \right) \triangle t^{2}  \right]\]
 
-<p>借助上面三个公式，假如已知 \(i\) 时刻的RVP状态，就可以推得 \(j\) 时刻的RVP状态，但是在优化过程中，一旦 \(\mathrm{R}_{i}\) 发生变化，要求得 \(j\) 时刻的RVP状态，需要重新进行高计算量的积分，因此引入预积分，只需要将 \(\triangle  \mathrm{R}_{ij}\) 这个中间增量求出来即可。</p>
+<p>These equations propagate the state from keyframe \(i\) to keyframe \(j\). However, during optimization, if \(\mathrm{R}_{i}\) changes, recomputing the integral for \(j\) is computationally expensive. Preintegration solves this by computing intermediate increments (\(\triangle  \mathrm{R}_{ij}\), \(\triangle \mathrm{v}_{ij}\), \(\triangle \mathrm{p}_{ij}\)) only once.</p>
 
-<h2 id="预积分">预积分</h2>
+<h2 id="preintegration">Preintegration</h2>
 
-<p>将第 \(i\) 时刻的状态和重力加速度分离出来</p>
+<p>Factor out the state at time \(i\) and gravity:</p>
 
 \[\triangle  \mathrm{R}_{ij} = \mathrm{R}_{i}^{T} \mathrm{R}_{j} = \prod_{k=i}^{j-1} \mathrm{Exp} \left( \left( \tilde{\omega}_{k} - \mathrm{b}_{k}^{g} - \mathrm{\eta}_{k}^{gd} \right) \triangle t \right)\]
 
 \[\mathrm{v}_{j} - \mathrm{v}_{i} - \mathrm{g} \triangle t_{ij} = \sum_{k=i}^{j-1} \mathrm{R}_{k} \left( \tilde{\mathrm{a}}_k - \mathrm{b}_k^{a} - \mathrm{\eta}_k^{ad} \right) \triangle t\]
 
-<p>转换到第 \(i\) 时刻的IMU坐标系，得：</p>
+<p>Transform to the IMU frame at time \(i\):</p>
 
 \[\begin{align*}
 \triangle \mathrm{v}_{ij} &amp;= \mathrm{R}_{i}^{T} \left( \mathrm{v}_{j} - \mathrm{v}_{i} - \mathrm{g} \triangle t_{ij} \right) \\
-&amp;= \sum_{k=i}^{j-1} \mathrm{R}_{ik} \left( \tilde{\mathrm{a}}_k - \mathrm{b}_k^{a} - \mathrm{\eta}_k^{ad} \right) \triangle t 
+&amp;= \sum_{k=i}^{j-1} \mathrm{R}_{i}^{T}\mathrm{R}_{k} \left( \tilde{\mathrm{a}}_k - \mathrm{b}_k^{a} - \mathrm{\eta}_k^{ad} \right) \triangle t  \\
+&amp;= \sum_{k=i}^{j-1} \triangle \mathrm{R}_{ik} \left( \tilde{\mathrm{a}}_k - \mathrm{b}_k^{a} - \mathrm{\eta}_k^{ad} \right) \triangle t
 \end{align*}\]
 
-<p>同理：</p>
+<p>Similarly for position:</p>
 
 \[\begin{align*}
 \triangle \mathrm{p}_{ij} &amp;= \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right) \\
-&amp;= \sum_{k=i}^{j-1} \left[ \mathrm{v}_{ik} \triangle t + \frac{1}{2} \triangle \mathrm{R}_{ik} \left( \tilde{\mathrm{a}}_{k} - \mathrm{b}_{k}^{a} - \mathrm{\eta}_{k}^{ad} \right) \triangle t^{2} \right]
+&amp;= \sum_{k=i}^{j-1} \left[ \mathrm{R}_{i}^{T}\mathrm{v}_{k} \triangle t + \frac{1}{2} \mathrm{R}_{i}^{T}\mathrm{R}_{k} \left( \tilde{\mathrm{a}}_{k} - \mathrm{b}_{k}^{a} - \mathrm{\eta}_{k}^{ad} \right) \triangle t^{2} \right] \\
+&amp;= \sum_{k=i}^{j-1} \left[ \triangle \mathrm{v}_{ik} \triangle t + \frac{1}{2} \triangle \mathrm{R}_{ik} \left( \tilde{\mathrm{a}}_{k} - \mathrm{b}_{k}^{a} - \mathrm{\eta}_{k}^{ad} \right) \triangle t^{2} \right]
 \end{align*}\]
 
-<p>由此，上面三个式子的 rhs 便与第 \(i\) 时刻和重力加速度无关，并且可以直接用第 \(i\) 关键帧和第 \(j\) 关键帧之间的IMU数据积分而来。</p>
+<p>The right-hand sides (rhs) of these equations are independent of the state at \(i\) and gravity. They can be preintegrated directly using IMU measurements between keyframes \(i\) and \(j\).</p>
 
-<h3 id="分离噪声">分离噪声</h3>
+<h3 id="noise-separation">Noise Separation</h3>
 
-<p>将上述预积分公式中的噪声分离出来，我们得到一个 <strong>与噪声无关的项 + 噪声</strong>的形式：</p>
+<p>Separate noise from the preintegration terms to obtain a form: <strong>noise-independent term + noise</strong>:</p>
 
 \[\begin{align*}
   \triangle \mathrm{R}_{ij} &amp;= \prod_{k=i}^{j-1} \left[ 
@@ -693,47 +694,45 @@
  &amp;= \triangle \tilde{\mathrm{R}}_{ij} \mathrm{Exp} \left( -\delta \phi_{ij} \right)
 \end{align*}\]
 
-<p>其中，\(\triangle \tilde{\mathrm{R}}_{ij} = \prod_{k=i}^{j-1} \mathrm{Exp} \left(\left(\tilde{\omega}_{k} - \mathrm{b}_{i}^{g}\right) \triangle t \right)\)。</p>
+<p>Where \(\triangle \tilde{\mathrm{R}}_{ij} = \prod_{k=i}^{j-1} \mathrm{Exp} \left(\left(\tilde{\omega}_{k} - \mathrm{b}_{i}^{g}\right) \triangle t \right)\) is the noise-free relative rotation increment.</p>
 
-<p>将分离噪声之后的 \(\triangle \tilde{\mathrm{R}}_{ij}\) 带入到本节开头的预积分公式中去，可以得到速度和加速度预积分的第二个形式：</p>
+<p>Substituting the noise-separated \(\triangle \tilde{\mathrm{R}}_{ij}\) into the original preintegration formulas yields similar forms for velocity and position:</p>
 
-\[\triangle \mathrm{v}_{ij} = \triangle \tilde{\mathrm{v}}_{ij} - \delta \mathrm{v}_{ij}\]
-
-<p>其中：</p>
-
-\[\triangle \tilde{\mathrm{v}_{ij}} = \sum_{k=i}^{j-1} \left[ 
-  \triangle \tilde{\mathrm{R}}_{ij} \left( 
+<p>\(\triangle \mathrm{v}_{ij} = \triangle \tilde{\mathrm{v}}_{ij} - \delta \mathrm{v}_{ij}\)
+where
+\(\triangle \tilde{\mathrm{v}}_{ij} = \sum_{k=i}^{j-1} \left[ 
+  \triangle \tilde{\mathrm{R}}_{ik} \left( 
     \tilde{\mathrm{a}}_{k} - \mathrm{b}_{i}^{a}
    \right) \triangle t
- \right]\]
-
-<p>对于位移，同样有：</p>
+ \right]\)</p>
 
 \[\triangle \mathrm{p}_{ij} = \triangle \tilde{\mathrm{p}}_{ij} - \delta \mathrm{p}_{ij}\]
 
-<p>将上述三式带入到本节开头的预积分公式中，也就是：</p>
+<p>Substituting these three expressions back into the original preintegration definitions:</p>
 
 \[\triangle \mathrm{R}_{ij} = \mathrm{R}_{i}^{T} \mathrm{R}_{j}\]
 
 \[\triangle \mathrm{v}_{ij} = \mathrm{R}_{i}^{T} \left( \mathrm{v}_{j} - \mathrm{v}_{i} - \mathrm{g} \triangle t_{ij} \right)\]
 
-<p>\(\triangle \mathrm{p}_{ij} = \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right)\)
-得：
-\(\triangle \tilde{\mathrm{R}}_{ij} = \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathrm{Exp} \left( \delta \phi_{ij} \right)\)</p>
+\[\triangle \mathrm{p}_{ij} = \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right)\]
+
+<p>Yields the relationships:</p>
+
+\[\triangle \tilde{\mathrm{R}}_{ij} = \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathrm{Exp} \left( \delta \phi_{ij} \right)\]
 
 \[\triangle \tilde{\mathrm{v}}_{ij} = \mathrm{R}_{i}^{T} \left( \mathrm{v}_{j} - \mathrm{v}_{i} - \mathrm{g} \triangle t_{ij} \right) + \delta \mathrm{v}_{ij}\]
 
 \[\triangle \tilde{\mathrm{p}}_{ij} = \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right) + \delta \mathrm{p}_{ij}\]
 
-<p>那么预积分噪声向量便可定义为：</p>
+<p>The preintegration noise vector is thus defined as:</p>
 
 \[\mathrm{\eta}_{ij}^{\triangle} =
 \begin{bmatrix}
   \delta \phi_{ij}, \delta \mathrm{v}_{ij}, \delta \mathrm{p}_{ij}
 \end{bmatrix}^{T}\]
 
-<h3 id="噪声传播">噪声传播</h3>
-<p>对预积分噪声 \(\mathrm{\eta}_{ij}^{\triangle}\) 做一阶近似，得:</p>
+<h3 id="noise-propagation">Noise Propagation</h3>
+<p>Applying first-order approximation to the preintegration noise \(\mathrm{\eta}_{ij}^{\triangle}\):</p>
 
 \[\delta \phi_{ij} \simeq \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{k+1 j}^{T} \mathrm{J}_{r}^{k} \eta_{k}^{gd} \triangle t\]
 
@@ -750,11 +749,11 @@
    \right)^{\wedge}  \delta \phi_{ik} \triangle t^{2} + \frac{1}{2} \triangle \tilde{\mathrm{R}}_{ik} \eta_{k}^{ad} \triangle t^{2}
  \right]\]
 
-<p>上式说明预积分噪声 \(\mathrm{\eta}_{ij}^{\triangle}\) 是关于IMU测量模型 \(\mathrm{\eta}_{k}^{d} = \left[ \mathrm{\eta}_{k}^{gd}, \mathrm{\eta}_{k}^{ad} \right]\) 的线性函数，因此，若已知IMU噪声 \(\mathrm{\eta}_{k}^{d}\) 的协方差矩阵，那么预积分噪声的协方差矩阵可以自然而然推出来。</p>
+<p>These equations show that the preintegration noise \(\mathrm{\eta}_{ij}^{\triangle}\) is a linear function of the IMU measurement noise \(\mathrm{\eta}_{k}^{d} = \left[ \mathrm{\eta}_{k}^{gd}, \mathrm{\eta}_{k}^{ad} \right]\). Therefore, if the covariance matrix of the IMU noise \(\mathrm{\eta}_{k}^{d}\) is known, the covariance matrix of the preintegration noise can be derived.</p>
 
-<h3 id="偏置更新">偏置更新</h3>
+<h3 id="bias-update">Bias Update</h3>
 
-<p>在之前的内容中都假设偏置在关键帧 \(i\) 和关键帧  \(j\) 内是一成不变的，但实际上这是不可能滴。如果在偏置每次改变的时候都重新计算一下IMU观测和预积分，那是大大得耗费资源，是不可取滴。所以这里也把预积分项改写为关于偏置的一阶线性近似函数：</p>
+<p>Previous derivations assumed constant biases between keyframes \(i\) and \(j\). In reality, biases drift. Recomputing preintegrals upon every bias change is computationally expensive. Instead, express the preintegrated terms as first-order approximations with respect to bias:</p>
 
 \[\begin{align*}
 \triangle \tilde{\mathrm{R}}_{ij}(\mathrm{b}_{i}^{g}) \simeq \triangle \tilde{\mathrm{R}}_{ij} (\bar{\mathrm{b}}_{i}^{g}) \mathrm{Exp} \left( 
@@ -764,26 +763,33 @@
 \triangle \tilde{\mathrm{p}}_{ij}(\mathrm{b}_{i}^{g}, \bar{\mathrm{b}}_{i}^{a}) \simeq \triangle \tilde{\mathrm{p}}_{ij} (\bar{\mathrm{b}}_{i}^{g}, \bar{\mathrm{b}}_{i}^{a}) + \frac{\partial{\tilde{\mathrm{p}}_{ij}}}{\partial{\mathrm{b}^{g}}} \delta \mathrm{b}^{g} + \frac{\partial{\tilde{\mathrm{p}}_{ij}}}{\partial{\mathrm{b}^{a}} } \delta \mathrm{b}^{a}
 \end{align*}\]
 
-<h3 id="预积分因子">预积分因子</h3>
+<p>Here, \(\bar{\mathrm{b}}_{i}^{g}, \bar{\mathrm{b}}_{i}^{a}\) are the biases at the linearization point, and \(\delta \mathrm{b}^{g}, \delta \mathrm{b}^{a}\) are small updates.</p>
 
-\[\mathrm{r}_{\triangle \mathrm{R}_{ij}} = \mathrm{Log} \left( 
+<h3 id="preintegration-factors">Preintegration Factors</h3>
+
+<p>The residual errors (factors) used in optimization (e.g., Bundle Adjustment) are:</p>
+
+<p><strong>Rotation Factor:</strong>
+\(\mathrm{r}_{\triangle \mathrm{R}_{ij}} = \mathrm{Log} \left( 
   \left( 
     \triangle \tilde{\mathrm{R}}_{ij} (\bar{\mathrm{b}}_{i}^{g}) \mathrm{Exp} \left( 
   \frac{\partial{\triangle \tilde{\mathrm{R}}_{ij}}}{\partial{\mathrm{b}^{g}}} \delta \mathrm{b}^{g}
  \right)
    \right)^{T}
   \mathrm{R}_{i}^{T} \mathrm{R}_{j}
- \right)\]
+ \right)\)</p>
 
-\[\mathrm{r}_{\triangle \mathrm{v}_{ij}} = \mathrm{R}_{i}^{T} \left( \mathrm{v}_{j} - \mathrm{v}_{i} - \mathrm{g} \triangle t_{ij} \right) - \left[ 
+<p><strong>Velocity Factor:</strong>
+\(\mathrm{r}_{\triangle \mathrm{v}_{ij}} = \mathrm{R}_{i}^{T} \left( \mathrm{v}_{j} - \mathrm{v}_{i} - \mathrm{g} \triangle t_{ij} \right) - \left[ 
   \triangle \tilde{\mathrm{v}}_{ij} (\bar{\mathrm{b}}_{i}^{g}, \bar{\mathrm{b}}_{i}^{a}) + \frac{\partial{\tilde{\mathrm{v}}_{ij}}}{\partial{\mathrm{b}^{g}}} \delta \mathrm{b}^{g} + \frac{\partial{\tilde{\mathrm{v}}_{ij}}}{\partial{\mathrm{b}^{a}} } \delta \mathrm{b}^{a}
- \right]\]
+ \right]\)</p>
 
-\[\mathrm{r}_{\triangle \mathrm{p}_{ij}} = \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right) - \left[ 
+<p><strong>Position Factor:</strong>
+\(\mathrm{r}_{\triangle \mathrm{p}_{ij}} = \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right) - \left[ 
   \triangle \tilde{\mathrm{p}}_{ij} (\bar{\mathrm{b}}_{i}^{g}, \bar{\mathrm{b}}_{i}^{a}) + \frac{\partial{\tilde{\mathrm{p}}_{ij}}}{\partial{\mathrm{b}^{g}}} \delta \mathrm{b}^{g} + \frac{\partial{\tilde{\mathrm{p}}_{ij}}}{\partial{\mathrm{b}^{a}} } \delta \mathrm{b}^{a}
- \right]\]
+ \right]\)</p>
 
-<h2 id="坐标系">坐标系</h2>
+<h2 id="coordinate-systems">Coordinate Systems</h2>
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
         <figure>
@@ -805,8 +811,8 @@
     </div>
 </div>
 <div class="caption">
-    Coordinate systems
-</div>]]></content><author><name></name></author><category term="SLAM" /><category term="IMU," /><category term="Preintegration," /><category term="ORBSLAM3" /><summary type="html"><![CDATA[Dive into IMU preintegration]]></summary></entry><entry><title type="html">NeRD</title><link href="https://renwuli.github.io/blog/2022/NeRD.en/" rel="alternate" type="text/html" title="NeRD" /><published>2022-04-01T15:00:00+00:00</published><updated>2022-04-01T15:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/NeRD.en</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/NeRD.en/"><![CDATA[<p>Paper: NeRD: Neural 3D Reflection Symmetry Detector</p>
+    Coordinate systems involved in visual-inertial odometry.
+</div>]]></content><author><name></name></author><category term="SLAM" /><category term="IMU," /><category term="Preintegration," /><category term="ORBSLAM3" /><summary type="html"><![CDATA[Dive into IMU preintegration]]></summary></entry><entry><title type="html">NeRD</title><link href="https://renwuli.github.io/blog/2022/NeRD/" rel="alternate" type="text/html" title="NeRD" /><published>2022-04-01T15:00:00+00:00</published><updated>2022-04-01T15:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/NeRD</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/NeRD/"><![CDATA[<p>Paper: NeRD: Neural 3D Reflection Symmetry Detector</p>
 
 <p>Author: Yichao Zhou, Shichen Liu, Yi Ma</p>
 
@@ -977,175 +983,7 @@
 </div>
 <div class="caption">
     Figure 3
-</div>]]></content><author><name></name></author><category term="Geometry," /><category term="NN" /><category term="Symmetry" /><summary type="html"><![CDATA[Paper: NeRD: Neural 3D Reflection Symmetry Detector]]></summary></entry><entry><title type="html">NeRD</title><link href="https://renwuli.github.io/blog/2022/NeRD/" rel="alternate" type="text/html" title="NeRD" /><published>2022-04-01T15:00:00+00:00</published><updated>2022-04-01T15:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/NeRD</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/NeRD/"><![CDATA[<p>Paper: NeRD: Neural 3D Reflection Symmetry Detector</p>
-
-<p>Author: Yichao Zhou, Shichen Liu, Yi Ma</p>
-
-<p>PDF: <a href="https://arxiv.org/pdf/2105.03211.pdf">https://arxiv.org/pdf/2105.03211.pdf</a></p>
-
-<p>Code: <a href="https://github.com/zhou13/nerd">https://github.com/zhou13/nerd</a></p>
-
-<h2 id="overview">Overview</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left">输入</th>
-      <th style="text-align: left">输出</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">单视角图片</td>
-      <td style="text-align: left">一个主导的镜面对称</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>总体方法：</p>
-<ol>
-  <li>使用coarse-to-fine的策略对symmetry进行遍历</li>
-  <li>通过构造3D的代价体来找到最好的symmetry</li>
-</ol>
-
-<h2 id="introduction">Introduction</h2>
-
-<p>使用监督学习从单张RGB图片中获取信息很容易 \(\rightarrow\) 假设CAD模型已知，一些工作聚焦在instance-level 3D pose estimation \(\rightarrow\) 现实世界中这个假设很难成立（一个物体的CAD模型很难获取）\(\rightarrow\) 之前的一些single-view category-level 3D pose estimation的工作通过在训练数据中进行插值来构建图像和3D模型之间的集合约束进而预测姿态 \(\rightarrow\) 但是这种formulation是ill-posed  \(\rightarrow\) 引入镜面对称（reflection symmetry）作为图片和3D模型的位姿之间的桥梁。</p>
-
-<p>观察：大部分物体的canonical space是将其对称平面与Y-Z平面进行对齐。</p>
-
-<p>Contributiion:</p>
-
-<ul>
-  <li>图像内的像素对应可以用来得到准确的对称平面法向估计</li>
-  <li>使用single-view dense feature matching来预测对称平面，性能超越之前的工作</li>
-  <li>对称性对很多下游任务都有助益，比如single-view姿态估计和深度估计</li>
-</ul>
-
-<h2 id="methods">Methods</h2>
-
-<h3 id="检验对称性">检验对称性</h3>
-
-<p>对于三维空间中的两个对称点 \(\mathrm{X}\) 和 \(\mathrm{X}^{'}\) 来说，其在成像平面上的投影为 \(\mathrm{x}\) 和 \(\mathrm{x}^{'}\)，则：</p>
-
-\[\mathrm{x}^{'} \propto \mathrm{KR_t M R_t^{-1}K^{-1}x = Cx}\]
-
-<p>其中 \(\mathrm{C = KR_t M R_t^{-1}K^{-1}}\)。</p>
-
-<p>将镜面对称参数化为 \(\mathrm{w} \in \mathbb{R}^3\)（代表对称平面的法向），那么：</p>
-
-\[\mathrm{
-    C(w) = K(I - \frac{2}{\Vert w \Vert_2^2}
-    \begin{bmatrix}
-    \mathrm{w} \\ 0
-    \end{bmatrix}
-    \begin{bmatrix}
-    \mathrm{w}^T &amp; 1
-    \end{bmatrix}
-    )K^{-1}
-}\]
-
-<p>也就是说 \(\mathrm{C}\) 是 \(\mathrm{w}\) 的函数，并且相应地给出一种检验其是否合法的方法。</p>
-
-<h3 id="预测">预测</h3>
-<p>使用神经网络去遍历所有可能的对称平面法向，然后检验是否是合法的对称性。</p>
-
-<h3 id="pipeline">Pipeline</h3>
-
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/posts/nerd/1-480.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/posts/nerd/1-800.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/posts/nerd/1-1400.webp" />
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/posts/nerd/1.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    Figure 1
-</div>
-
-<p>对于输入的图片，首先计算2D特征图，然后生成一堆候选的对称平面法向，对于每个候选的法向 \(\mathrm{w}\)，把2D特征图warp过去，构建一个3D的代价体进行photo-consistency的匹配，最后，cost volume网络将代价体转换为置信值，将具有最大置信度的 \(\mathrm{w}\) 作为最终的预测对称平面。</p>
-
-<p>那么，如何去生成候选的对称平面法向呢？因为 \(\mathrm{w}\) 的定义域 \(\mathbb{R}^3\) 是连续的，如果使用暴力采样，将会使得复杂度极高。所以该文采用了coarse-to-fine的策略，先均匀采样，然后校验得到置信度最大的 \(\mathrm{w}^\star\)，之后将采样范围缩小到 \(\mathrm{w}^\star\) 附近，再次迭代，直到能够达到<strong>the desired accuracy</strong>。</p>
-
-<p>特征提取器选择ResNet的变种，对于采样得到的 \(\mathrm{w}_i\) 来说，得到其transformation矩阵 \(\mathrm{C}(\mathrm{w}_i)\)。对于图像中的每一个像素点 \((x, y)\) 通过对称得到其对称点 \((x^{'}, y^{'})\)，将这两个像素点的特征concat在一起作为feature warping，得到代价体，之后代价体送入cost volume network（也就是一系列的3D convolution + max-pool + sigmoid）得到 \(\mathrm{w}_i\) 对应的置信度 \(\hat{l}_i\)。</p>
-
-<h3 id="训练">训练</h3>
-<p>在coarse-to-fine的每一level而言，分别在ground truth: \(\mathrm{w}\) 周边进行采样，对采样得到的 \(\hat{\mathrm{w}}\)，其标签为：</p>
-
-\[l_i = 1[\mathrm{arccos}(\vert &lt;\mathrm{w}, \hat{\mathrm{w}}&gt; \vert) \lt \triangle_i]\]
-
-<p>损失函数为：</p>
-
-\[L_{\mathrm{cls}} = \sum_i \mathrm{BCE}(\hat{l_i}, l_i)\]
-
-<h2 id="applications">Applications</h2>
-
-<h3 id="pose-recovery">Pose Recovery</h3>
-
-<p>不太明白这里的2 DoFs</p>
-
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/posts/nerd/2-480.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/posts/nerd/2-800.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/posts/nerd/2-1400.webp" />
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/posts/nerd/2.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    Figure 2
-</div>
-
-<h3 id="depth-estimation">Depth Estimation</h3>
-
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/posts/nerd/3-480.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/posts/nerd/3-800.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/posts/nerd/3-1400.webp" />
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/posts/nerd/3.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    Figure 3
-</div>]]></content><author><name></name></author><category term="Geometry," /><category term="NN" /><category term="Symmetry" /><summary type="html"><![CDATA[Paper: NeRD: Neural 3D Reflection Symmetry Detector]]></summary></entry><entry><title type="html">SymmetryNet</title><link href="https://renwuli.github.io/blog/2022/SymmetryNet.en/" rel="alternate" type="text/html" title="SymmetryNet" /><published>2022-04-01T15:00:00+00:00</published><updated>2022-04-01T15:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/SymmetryNet.en</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/SymmetryNet.en/"><![CDATA[<p>Paper: SymmetryNet: Learning to Predict Reflectional and Rotational
+</div>]]></content><author><name></name></author><category term="Geometry," /><category term="NN" /><category term="Symmetry" /><summary type="html"><![CDATA[Paper: NeRD: Neural 3D Reflection Symmetry Detector]]></summary></entry><entry><title type="html">SymmetryNet</title><link href="https://renwuli.github.io/blog/2022/SymmetryNet/" rel="alternate" type="text/html" title="SymmetryNet" /><published>2022-04-01T15:00:00+00:00</published><updated>2022-04-01T15:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/SymmetryNet</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/SymmetryNet/"><![CDATA[<p>Paper: SymmetryNet: Learning to Predict Reflectional and Rotational
 Symmetries of 3D Shapes from Single-View RGB-D Images</p>
 
 <p>Author: YIFEI SHI, JUNWEN HUANG, HONGJIA ZHANG, XIN XU, SZYMON RUSINKIEWICZ, KAI XU</p>
@@ -1335,188 +1173,4 @@ Symmetries of 3D Shapes from Single-View RGB-D Images</p>
 <ol>
   <li>Strong supervision required</li>
   <li>Limited by the pre-defined maximum number of symmetries per object (R=10)</li>
-</ol>]]></content><author><name></name></author><category term="Geometry," /><category term="NN" /><category term="Symmetry" /><summary type="html"><![CDATA[Paper: SymmetryNet: Learning to Predict Reflectional and Rotational Symmetries of 3D Shapes from Single-View RGB-D Images]]></summary></entry><entry><title type="html">SymmetryNet</title><link href="https://renwuli.github.io/blog/2022/SymmetryNet/" rel="alternate" type="text/html" title="SymmetryNet" /><published>2022-04-01T15:00:00+00:00</published><updated>2022-04-01T15:00:00+00:00</updated><id>https://renwuli.github.io/blog/2022/SymmetryNet</id><content type="html" xml:base="https://renwuli.github.io/blog/2022/SymmetryNet/"><![CDATA[<p>Paper: SymmetryNet: Learning to Predict Reflectional and Rotational
-Symmetries of 3D Shapes from Single-View RGB-D Images</p>
-
-<p>Author: YIFEI SHI, JUNWEN HUANG, HONGJIA ZHANG, XIN XU, SZYMON RUSINKIEWICZ, KAI XU</p>
-
-<p>PDF: <a href="https://arxiv.org/pdf/2008.00485.pdf">https://arxiv.org/pdf/2008.00485.pdf</a></p>
-
-<p>Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com/GodZarathustra/SymmetryNet</a></p>
-
-<h2 id="overview">Overview</h2>
-
-<ul>
-  <li>输入：RGB-D</li>
-  <li>输出：\(M^{\text{ref}}\) 个镜面对称和 \(M^{\text{rot}}\) 个旋转对称</li>
-</ul>
-
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/posts/symmetrynet/1-480.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/posts/symmetrynet/1-800.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/posts/symmetrynet/1-1400.webp" />
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/posts/symmetrynet/1.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    Figure 1
-</div>
-
-<p>总体方法：</p>
-<ol>
-  <li>特征提取：RGB图像输入CNN网络中提取逐像素特征，Depth深度图转成点云输入PointNet提取逐点特征，之后将图像特征和点云特征进行Fusion。</li>
-  <li>以每个点的特征作为输入，逐点进行对称性预测。</li>
-  <li>最后通过aggregation和可视性验证对逐点对称性进行过滤和集成，得到最终的对称性预测结果。</li>
-</ol>
-
-<h2 id="introduction">Introduction</h2>
-
-<p>对称性检测可以通过纯几何信息进行求解，比如先建立点到点之间的对应关系，得到大量的点对之间的对称性变换，然后通过霍夫投票得到全局的对称性 \(\rightarrow\) 但是这种方法在single-view（几何信息不足，partial observation and object occlusion）的情况下面临挑战，有可能找不到局部的对称点对来支撑全局的对称性 \(\rightarrow\) 所以当前的对称性检测不仅仅需要依赖几何信息，也需要来自于统计分析（也就是从大量数据中去学习patten）。</p>
-
-<h2 id="methods">Methods</h2>
-
-<p>该文claim一旦3D模型的几何已知，那么得到它的对称性是分分钟的事情（真的这么简单吗？我看未必）。传统的对称性检测方法通常先建立点或者组件之间的correspondence，然后再aggragate得到对称性。但是single-view的表征通常是不完整和视角受限的。在不完整几何上做对称性检测是病态的。通常我们去识别一个不完整物体对称性的时候，会去靠先验来判别这个对称性是不是歧义的。但是对于一个我们不认识的物体或者说辨别不出来是什么种类的物体，我们没有先验，那么只能通过建立对称的correspondence来推测出对称性。这篇文章主要聚焦的问题就是：<strong>对于认识或者不认识的物体，通过将对称性预测和对称映射耦合起来，构造一个统一的single-view的对称性检测方案</strong>。</p>
-
-<h3 id="逐点的对称性预测">逐点的对称性预测</h3>
-
-<p>因为对称性是non-local的，所以需要共同使用全局特征和局部特征来进行逐点对称性的预测。因为avg-pooling对于对称性预测是冗余的，max-pooling可能会丢失太多信息，该文采用weighted pooling，也就是对每个点的特征赋予一个权重，然后进行加权求和得到全局特征，该权重也是通过一个小网络学出来的，叫做spatially weighted pooling layer。</p>
-
-<p>为了提高精度和泛化性，采用multi-task策略进行训练，也就是：</p>
-<ol>
-  <li>分类，判别对称性种类：no symmetry / reflective symmetry / rotational symmetry</li>
-  <li>回归对称性的参数</li>
-  <li>回归该点的对称点位置</li>
-  <li>分类，判别该点是不是某个点的对称点</li>
-</ol>
-
-<p>为了让网络更加好训，所有预测的3D坐标均是相对于当前点的局部坐标，对于以上4部分，分别设计loss如下：</p>
-<ol>
-  <li>cross-entropy</li>
-  <li>当前点 \(P_i\) 投影到到预测的对称平面（对称轴）的点与真实的投影点之间的2范数</li>
-  <li>2范数</li>
-  <li>cross-entropy</li>
-</ol>
-
-<p>对于旋转对称来说，我们去做上面 3 的 loss 不太容易，因为一个点的旋转对称点有可能有多个（旋转对称的阶数有穷）或无穷多个（连续的旋转对称），所以该文选择不直接对 3 做 L2 的 loss，而是去预测某点在不在该点对应的旋转对称轨道上的概率。并且通过将预测旋转对称的阶数转换成一个分类的问题，也就是 0~R 类，0 代表连续旋转对称，R 代表所能预测的最大旋转对称阶数，该文将 R 取作 10，也就是说该文能预测的最大的旋转对称的阶数为 10。</p>
-
-<h3 id="处理任意数目的对称性">处理任意数目的对称性</h3>
-<p>如果要处理任意数目的对称性预测，要不设计一个循环神经网络（显然是不现实的，因为我要知道到底循环多少次？），要么是引出 M 个分支来预测 M 个对称性（其中 M 是设定的最大对称性的数目）。但是采用后者的策略需要将 M 个分支各自区分开来（也就是定义顺序），该文采用基于 optimal assignment 的方法来训练网络。也就是将M个输出与GT对应起来。</p>
-
-<p>对于那些已经被判断对称性种类的分类器验证（输出不为0）的对称性预测值，找到它所对应的GT对称性，然后求loss。</p>
-
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/posts/symmetrynet/2-480.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/posts/symmetrynet/2-800.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/posts/symmetrynet/2-1400.webp" />
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/posts/symmetrynet/2.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    Figure 2
-</div>
-
-<p>虽然这里是说处理任意数目的对称性，但是显然，依然受上一节中 R=10 的限制。</p>
-
-<h3 id="对称性推理">对称性推理</h3>
-
-<p>在推理阶段，首先编码得到 RGB-D 的特征，然后对每个点进行对称性预测，然后使用聚类的方式得到最终的全局对称性预测结果。因为每个点预测对称性的准确性有差异，这里通过对 symmetry type classifier 的最后一层接一个概率层，得到每个点预测结果的权重，之后将这个概率作为 DBSCAN 中的密度权重，通过聚类得到最终的预测结果。</p>
-
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/posts/symmetrynet/3-480.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/posts/symmetrynet/3-800.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/posts/symmetrynet/3-1400.webp" />
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/posts/symmetrynet/3.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    Figure 3
-</div>
-
-<p>得到预测的对称性结果之后，还需要做的是对称性的检验，通过检验的对称性留下，没有通过检验的去除。将深度图转换为提速表示，将空间划分为三部分：可视部分，空气部分和未知部分，然后得到可视部分的对称部分，将对称部分与空气部分求交，便得到了 mismatch 的部分（很容易理解，如果对称部分是合理的，那么我摄像头应该本来就能看到，按理来说应该是可视部分，但是现在却为空气部分，说明不合理）。如果 mismatch 的部分太大，就说明该对称性预测的不对。这个策略作者也在训练阶段作为一项额外的约束进行了尝试，但是发现收敛太慢，所以就只在推理完之后作为一个验证手段。</p>
-
-<h2 id="评价标准">评价标准</h2>
-
-<p>该文使用 precision-recall 指标来评价对称性预测的好与坏，其中 precision 代表我预测的对称性中有多大比例是正确的，而 recall 代表 GT 中的对称性我有多大的比例正确预测出来了。</p>
-
-<p>关于如何衡量预测的对称性是正确还是错误，作者给出了一个简单的评估指标：将模型按照预测的对称性对称过去，然后求原模型和对称模型的距离，该距离与 GT 对称性求得的距离做损失来打分。</p>
-
-<div class="row mt-3">
-    <div class="col-sm mt-3 mt-md-0">
-        <figure>
-
-  <picture>
-    
-    <source class="responsive-img-srcset" media="(max-width: 480px)" srcset="/assets/img/posts/symmetrynet/4-480.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 800px)" srcset="/assets/img/posts/symmetrynet/4-800.webp" />
-    <source class="responsive-img-srcset" media="(max-width: 1400px)" srcset="/assets/img/posts/symmetrynet/4-1400.webp" />
-    
-
-    <!-- Fallback to the original file -->
-    <img src="/assets/img/posts/symmetrynet/4.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" data-zoomable="" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
-
-  </picture>
-
-</figure>
-
-    </div>
-</div>
-<div class="caption">
-    Figure 4
-</div>
-
-<h2 id="implementation">Implementation</h2>
-
-<p>读完 paper 有一个问题，如果每个模型都预测 \(M\) 个对称性，但是每个模型的实际对称性个数可不是都一样的，有的模型 1 个对称，有的模型 2 个对称，有的模型可能更多，那么怎么做批处理，计算 loss 反传呢？读作者的代码，从 https://github.com/GodZarathustra/SymmetryNet/blob/HEAD/lib/loss.py#L10-L11 可以看到作者在每次计算 loss 的时候，实际上 batch size 为 1，在 https://github.com/GodZarathustra/SymmetryNet/blob/HEAD/tools/train_shapenet.py#L81-L82 也可以看到 dataloader 的 batch size 也被设为 1 了，那么事情就变得明了，作者在实际实现的时候，是一个模型一个模型训练的，没有采用批处理，这也算是无奈之举。</p>
-
-<h2 id="总结">总结</h2>
-
-<p>Pros.</p>
-<ol>
-  <li>it handles RGB-D inputs, and can deal with incomplete and partial observation</li>
-  <li>end-to-end deep learning method</li>
-</ol>
-
-<p>Cons:</p>
-<ol>
-  <li>strong supervision</li>
-  <li>limited with pre-defined maximum of number of symmetries per object</li>
 </ol>]]></content><author><name></name></author><category term="Geometry," /><category term="NN" /><category term="Symmetry" /><summary type="html"><![CDATA[Paper: SymmetryNet: Learning to Predict Reflectional and Rotational Symmetries of 3D Shapes from Single-View RGB-D Images]]></summary></entry></feed>

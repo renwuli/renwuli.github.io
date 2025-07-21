@@ -134,40 +134,40 @@
 
   <article class="post-content">
     <ul id="toc" class="section-nav">
-<li class="toc-entry toc-h2"><a href="#%E4%B8%BB%E8%A6%81%E8%B4%A1%E7%8C%AE">主要贡献：</a></li>
-<li class="toc-entry toc-h2"><a href="#%E7%A1%AC%E4%BB%B6%E8%AE%BE%E7%BD%AE">硬件设置：</a></li>
+<li class="toc-entry toc-h2"><a href="#main-contributions">Main Contributions:</a></li>
+<li class="toc-entry toc-h2"><a href="#hardware-setup">Hardware Setup:</a></li>
 <li class="toc-entry toc-h2">
-<a href="#%E6%B5%81%E7%A8%8B">流程</a>
+<a href="#workflow">Workflow</a>
 <ul>
-<li class="toc-entry toc-h3"><a href="#a-%E9%A2%84%E7%A7%AF%E5%88%86">A. 预积分</a></li>
+<li class="toc-entry toc-h3"><a href="#a-preintegration">A. Preintegration</a></li>
 <li class="toc-entry toc-h3">
-<a href="#b-%E5%88%9D%E5%A7%8B%E5%8C%96">B. 初始化</a>
+<a href="#b-initialization">B. Initialization</a>
 <ul>
-<li class="toc-entry toc-h4"><a href="#%E9%99%80%E8%9E%BA%E4%BB%AAbias">陀螺仪bias</a></li>
-<li class="toc-entry toc-h4"><a href="#%E4%BF%AE%E6%AD%A3%E9%87%8D%E5%8A%9B%E6%96%B9%E5%90%91%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E9%80%9F%E5%BA%A6">修正重力方向和初始化速度</a></li>
+<li class="toc-entry toc-h4"><a href="#gyroscope-bias">Gyroscope Bias</a></li>
+<li class="toc-entry toc-h4"><a href="#refine-gravity-direction-and-initialize-velocity">Refine Gravity Direction and Initialize Velocity</a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h3"><a href="#c-%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%BC%98%E5%8C%96">C. 非线性优化</a></li>
-<li class="toc-entry toc-h3"><a href="#d-%E5%9C%A8%E7%BA%BF%E5%A4%96%E5%8F%82%E6%A0%87%E5%AE%9A">D. 在线外参标定</a></li>
+<li class="toc-entry toc-h3"><a href="#c-nonlinear-optimization">C. Nonlinear Optimization</a></li>
+<li class="toc-entry toc-h3"><a href="#d-online-extrinsic-calibration">D. Online Extrinsic Calibration</a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h2"><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE">参考文献</a></li>
+<li class="toc-entry toc-h2"><a href="#references">References</a></li>
 </ul>
 <p>Paper: Visual-Inertial Odometry Tightly Coupled with Wheel Encoder Adopting Robust Initialization and Online Extrinsic Calibration</p>
 
 <p>PDF: <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8967607" rel="external nofollow noopener" target="_blank">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=8967607</a></p>
 
-<h2 id="主要贡献">
-<a class="anchor" href="#%E4%B8%BB%E8%A6%81%E8%B4%A1%E7%8C%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>主要贡献：</h2>
+<h2 id="main-contributions">
+<a class="anchor" href="#main-contributions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Main Contributions:</h2>
 <ul>
-  <li>在预积分阶段融合IMU和轮速计，4-DoF非线性优化得到更加准确的尺度</li>
-  <li>IMU-Camera-轮速计的联合初始化方法</li>
-  <li>在线标定IMU-轮速计外参</li>
+  <li>Fusion of IMU and wheel encoder at the preintegration stage, achieving more accurate scale through 4-DoF nonlinear optimization</li>
+  <li>Joint initialization method for IMU-Camera-Wheel encoder</li>
+  <li>Online calibration of IMU-Wheel encoder extrinsic parameters</li>
 </ul>
 
-<h2 id="硬件设置">
-<a class="anchor" href="#%E7%A1%AC%E4%BB%B6%E8%AE%BE%E7%BD%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>硬件设置：</h2>
-<p>后驱四轮车（当前面两个轮子旋转时，后面两个轮子的朝向不改变），轮速计安装在后左车轮。左后轮的速度方向始终朝向y轴。</p>
+<h2 id="hardware-setup">
+<a class="anchor" href="#hardware-setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Hardware Setup:</h2>
+<p>Rear-wheel-drive four-wheeled vehicle (rear wheels maintain fixed orientation when front wheels rotate), wheel encoder installed on rear-left wheel. Velocity direction of left rear wheel always aligns with the y-axis.</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -193,15 +193,15 @@
     Figure 1
 </div>
 
-<h2 id="流程">
-<a class="anchor" href="#%E6%B5%81%E7%A8%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>流程</h2>
-<p>初始化 → 传感器坐标系与重力方向对齐，创建初始地图 → IMU、轮速计预积分，特征点提取与跟踪 → 滑动窗口非线性优化 → 当前帧的pvq计算得到</p>
+<h2 id="workflow">
+<a class="anchor" href="#workflow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Workflow</h2>
+<p>Initialization → Align sensor coordinate systems with gravity direction, create initial map → IMU and wheel encoder preintegration, feature extraction and tracking → Sliding window nonlinear optimization → Compute current frame’s pvq</p>
 
-<p>当初始化结束之后，外参便写死不再改变</p>
+<p>After initialization completes, extrinsic parameters are fixed and no longer updated.</p>
 
-<h3 id="a-预积分">
-<a class="anchor" href="#a-%E9%A2%84%E7%A7%AF%E5%88%86" aria-hidden="true"><span class="octicon octicon-link"></span></a>A. 预积分</h3>
-<p>其实是VINS-MONO预积分公式的扩展（加入轮速计）</p>
+<h3 id="a-preintegration">
+<a class="anchor" href="#a-preintegration" aria-hidden="true"><span class="octicon octicon-link"></span></a>A. Preintegration</h3>
+<p>Extension of VINS-MONO preintegration formulas (incorporating wheel encoder)</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -227,13 +227,13 @@
     Figure 2
 </div>
 
-<p>在初始阶段，\(\hat{\alpha}_i^i, \hat{\beta}^i_i, \hat{\eta}^i_i\) 均为0，而 \(\hat{\gamma}^i_i\) 为单位四元数。</p>
+<p>At initial stage, \(\hat{\alpha}_i^i, \hat{\beta}^i_i, \hat{\eta}^i_i\) are all zero, while \(\hat{\gamma}^i_i\) is the identity quaternion.</p>
 
 <blockquote>
   <p>Joan Sola. Quaternion kinematics for the error-state kalman filter. arXiv preprint arXiv:1711.02508, 2017.</p>
 </blockquote>
 
-<p>参考上文，使用扰动方式计算出运动学公式，推导出协方差矩阵：</p>
+<p>Using perturbation methods to derive kinematic equations and compute covariance matrix:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -263,7 +263,7 @@
 
 \[\Sigma_{i, l+1} = B_{i,l}QB_{i,l}^T+A_{i,l}\Sigma_{i,l}A_{i,l}^T\]
 
-<p>和VINS-MONO的对比下来看一下：</p>
+<p>Comparison with VINS-MONO:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -289,20 +289,19 @@
     Figure 4
 </div>
 
-<p>这里面也讨论了一下VINS-MONO初始化的问题：</p>
+<p>Discusses VINS-MONO initialization limitations:</p>
 <blockquote>
-  <p>The initailization procedure of VINS is well-designed, but prone to error for a car with a monocular camera facing forward moving at approximately constant velocity.</p>
+  <p>The initialization procedure of VINS is well-designed, but prone to error for a car with a monocular camera facing forward moving at approximately constant velocity.</p>
 </blockquote>
 
-<p>也就是说，如果车子以近似恒速的状态向前运动，VINS-MONO往往会出错。</p>
+<p>This indicates that when a vehicle moves forward at near-constant velocity, VINS-MONO often fails.</p>
 
-<h3 id="b-初始化">
-<a class="anchor" href="#b-%E5%88%9D%E5%A7%8B%E5%8C%96" aria-hidden="true"><span class="octicon octicon-link"></span></a>B. 初始化</h3>
+<h3 id="b-initialization">
+<a class="anchor" href="#b-initialization" aria-hidden="true"><span class="octicon octicon-link"></span></a>B. Initialization</h3>
 
-<h4 id="陀螺仪bias">
-<a class="anchor" href="#%E9%99%80%E8%9E%BA%E4%BB%AAbias" aria-hidden="true"><span class="octicon octicon-link"></span></a>陀螺仪bias</h4>
-
-<p>先像VINS-MONO一样做SFM，得到up-to-scale的视觉structure，然后与IMU进行手眼标定，通过旋转约束最小二乘计算得到陀螺仪的bias：</p>
+<h4 id="gyroscope-bias">
+<a class="anchor" href="#gyroscope-bias" aria-hidden="true"><span class="octicon octicon-link"></span></a>Gyroscope Bias</h4>
+<p>First perform SFM like VINS-MONO to obtain up-to-scale visual structure, then calibrate with IMU using rotation constraints via least squares to compute gyroscope bias:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -328,10 +327,10 @@
     Figure 5
 </div>
 
-<p>得到新的陀螺仪bias \(\mathrm{b}_w\) 之后，重新预积分，以避免使用不精确的陀螺仪bias引入的累计误差。</p>
+<p>After obtaining new gyroscope bias \(\mathrm{b}_w\), recompute preintegration to avoid accumulated errors from inaccurate bias.</p>
 
-<h4 id="修正重力方向和初始化速度">
-<a class="anchor" href="#%E4%BF%AE%E6%AD%A3%E9%87%8D%E5%8A%9B%E6%96%B9%E5%90%91%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E9%80%9F%E5%BA%A6" aria-hidden="true"><span class="octicon octicon-link"></span></a>修正重力方向和初始化速度</h4>
+<h4 id="refine-gravity-direction-and-initialize-velocity">
+<a class="anchor" href="#refine-gravity-direction-and-initialize-velocity" aria-hidden="true"><span class="octicon octicon-link"></span></a>Refine Gravity Direction and Initialize Velocity</h4>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -357,7 +356,7 @@
     Figure 6
 </div>
 
-<p>依然是和VINS-MONO类似的方程：</p>
+<p>Equations similar to VINS-MONO:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -383,19 +382,19 @@
     Figure 7
 </div>
 
-<p>因为轮速计的$XY$平面在定义时是和car的机壳水平的，所以可以近似地认为轮速计的 \(Z\) 方向是和重力方向一致的，将其转到body-imu坐标系下得到重力的初始值：</p>
+<p>Since wheel encoder’s XY plane is defined level with car body, its Z-axis approximately aligns with gravity direction. Transform to body-IMU frame for initial gravity:</p>
 
 \[g_0^{b0} = R_o^b[0 ~ 0 ~ g]^T\]
 
-<p>之后进行重力方向的修正（重力的大小已知），和VINS-MONO类似，将重力方向在切平面处过参数化，引入两个新的切向量，进行优化：</p>
+<p>Refine gravity direction (known magnitude) similar to VINS-MONO by over-parameterizing in tangent plane with two new tangent vectors:</p>
 
 \[g^{b0} = g_0^{b0}+B\triangle g\]
 
-<p>其中，$B$即为这两个切向量的基。</p>
+<p>where $B$ is the basis formed by these tangent vectors.</p>
 
-<h3 id="c-非线性优化">
-<a class="anchor" href="#c-%E9%9D%9E%E7%BA%BF%E6%80%A7%E4%BC%98%E5%8C%96" aria-hidden="true"><span class="octicon octicon-link"></span></a>C. 非线性优化</h3>
-<p>cost function由三个部分组成：边缘化的term，重投影误差的term和IMU-轮速计的term。</p>
+<h3 id="c-nonlinear-optimization">
+<a class="anchor" href="#c-nonlinear-optimization" aria-hidden="true"><span class="octicon octicon-link"></span></a>C. Nonlinear Optimization</h3>
+<p>Cost function comprises three terms: marginalization term, reprojection error term, and IMU-wheel encoder term.</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -421,7 +420,7 @@
     Figure 8
 </div>
 
-<p>其中 \(e_s^k\) 是IMU-轮速计的residual，是我们重点关注的：</p>
+<p>The term \(e_s^k\) (IMU-wheel encoder residual) is our focus:</p>
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -447,20 +446,20 @@
     Figure 9
 </div>
 
-<p>上式对 \(b_{a_k}, b_{w_k}\) 和 \(R_o^b\) 求导，再求解到最优解。</p>
+<p>Differentiate w.r.t \(b_{a_k}, b_{w_k}\) and \(R_o^b\), then solve for optimal solution.</p>
 
-<h3 id="d-在线外参标定">
-<a class="anchor" href="#d-%E5%9C%A8%E7%BA%BF%E5%A4%96%E5%8F%82%E6%A0%87%E5%AE%9A" aria-hidden="true"><span class="octicon octicon-link"></span></a>D. 在线外参标定</h3>
-<p>分为两个外参：camera-imu外参和imu-odemetry外参。但是作者也说了，当整个系统没有良好的约束时（比如缺乏旋转、IMU没有良好的激励），动态地调整外参可能会导致系统运行失败。</p>
+<h3 id="d-online-extrinsic-calibration">
+<a class="anchor" href="#d-online-extrinsic-calibration" aria-hidden="true"><span class="octicon octicon-link"></span></a>D. Online Extrinsic Calibration</h3>
+<p>Two extrinsics: camera-IMU and IMU-odometry. Authors note that dynamic extrinsic adjustment may fail under poor constraints (e.g., lack of rotation, insufficient IMU excitation).</p>
 
 <blockquote>
   <p>Consider that one cannot distinguish the direction of local gravity from that of the accelerometer bias when there is no rotational motion, which is pointed out in [6]. That is to say, the lack of constraints will result in the unstable estimation of accelerometer bias. Conversely, the convergence of accelerometer bias indicates that the system has become well-constrained.</p>
 </blockquote>
 
-<p><strong>当加速度计的bias很好地收敛，那就意味着整个系统有良好的约束。</strong></p>
+<p><strong>Convergence of accelerometer bias indicates sufficient system constraints.</strong></p>
 
-<h2 id="参考文献">
-<a class="anchor" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE" aria-hidden="true"><span class="octicon octicon-link"></span></a>参考文献</h2>
+<h2 id="references">
+<a class="anchor" href="#references" aria-hidden="true"><span class="octicon octicon-link"></span></a>References</h2>
 <p>[1] Tong Qin, Peiliang Li, and Shaojie Shen. Vins-mono: A robust and versatile monocular visual-inertial state estimator. IEEE Transactions on Robotics, 34(4):1004–1020, 2018.</p>
 
 <p>[2] Meixiang Quan, Songhao Piao, Minglang Tan, and Shi-Sheng Huang. Tightly-coupled monocular visual-odometric slam using wheels and a mems gyroscope. arXiv preprint arXiv:1804.04854, 2018.</p>
@@ -500,12 +499,6 @@
 
   <li class="my-2">
     <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/blog/2022/SymmetryNet/">SymmetryNet</a>
-  </li>
-
-  
-
-  <li class="my-2">
-    <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/blog/2022/SymmetryNet.en/">SymmetryNet</a>
   </li>
 
   

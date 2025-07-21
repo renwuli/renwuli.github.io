@@ -2,19 +2,19 @@
 layout: post
 title: Wheel Preintegration
 date: 2022-11-11 20:00:00
-description: 
+description:
 tags: IMU, Wheel, Preintegration, VINS
 categories: SLAM
 toc: true
 ---
 
-## 轮速计噪声模型
+## Wheel Encoder Noise Model
 
 $$
 _{O}\widetilde{\mathbf{u}}(t) = _{O}\mathbf{u}(t) + \mathbf{\eta}^{u}(t)
 $$
 
-## 轮速计运动模型
+## Wheel Encoder Motion Model
 
 $$
 _{W} \dot{\mathbf{o}} = _{W}\mathbf{u}
@@ -24,50 +24,50 @@ $$
 _{W} \dot{\mathbf{o}} = \mathrm{R}_{WB} \cdot \mathrm{R}^{B}_{O} \cdot _{O} \mathbf{u}
 $$
 
-## 相邻时刻的轮速测量模型
+## Wheel Measurement Model Between Consecutive Timesteps
 
 $$
 _{W}\mathbf{o}(t + \triangle t) = _{W}\mathbf{o}(t) + _{W}\mathbf{u} (t) \triangle t
 $$
 
-将 $$ \mathrm{R}_{WB} $$ 记作 $$ \mathrm{R} $$，默认位移 $$ \mathbf{o} $$ 和速度 $$ \mathbf{v} $$ 为世界坐标系下的量，则：
+Let $$ \mathrm{R}\_{WB} $$ be denoted as $$ \mathrm{R} $$, with default position $$ \mathbf{o} $$ and velocity $$ \mathbf{v} $$ in world frame:
 
 $$
 \mathbf{o}(t + \triangle t) = \mathbf{o}(t) + \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \cdot \mathbf{u} \triangle t
 $$
 
-考虑噪声模型，有：
+Considering noise model:
 
 $$
-\mathbf{o}(t + \triangle t) = \mathbf{o}(t) + \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \cdot \left( 
+\mathbf{o}(t + \triangle t) = \mathbf{o}(t) + \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \cdot \left(
   \tilde{\mathbf{u}}(t) - \mathbf{\eta}^{ud}(t)
  \right) \triangle t
 $$
 
-## 关键帧之间的轮速测量模型
+## Wheel Measurement Model Between Keyframes
 
 $$
-\mathbf{o}_{j} = \mathbf{o}_{i} + \sum_{k=i}^{j-1} \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \left( 
+\mathbf{o}_{j} = \mathbf{o}_{i} + \sum_{k=i}^{j-1} \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \left(
   \tilde{\mathbf{u}}_{k} - \mathbf{\eta}^{ud}_{k}
  \right) \triangle t
 $$
 
-## 预积分
+## Preintegration
 
-将第 $$ i $$ 时刻的状态分离出来：
+Factor out state at time $$ i $$:
 
 $$
-\mathbf{o}_{j} - \mathbf{o}_{i} = \sum_{k=i}^{j-1} \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \left( 
+\mathbf{o}_{j} - \mathbf{o}_{i} = \sum_{k=i}^{j-1} \mathrm{R}_{k} \cdot \mathrm{R}^{B}_{O} \left(
   \tilde{\mathbf{u}}_{k} - \mathbf{\eta}^{ud}_{k}
  \right) \triangle t
 $$
 
-并转换到第 $$ i $$ 时刻的IMU坐标系，得：
+Transform to IMU frame at time $$ i $$:
 
 $$
 \begin{align*}
 \triangle \mathbf{o}_{ij} &= \mathrm{R}_{i}^{T} \left( \mathbf{o}_{j} - \mathbf{o}_{i} \right) \\
-&= \sum_{k=i}^{j-1} \triangle  \mathrm{R}_{ik} \cdot \mathrm{R}^{B}_{O} \left( 
+&= \sum_{k=i}^{j-1} \triangle  \mathrm{R}_{ik} \cdot \mathrm{R}^{B}_{O} \left(
   \tilde{\mathbf{u}}_{k} - \mathbf{\eta}^{ud}_{k}
  \right) \triangle t
 \end{align*}
@@ -79,28 +79,28 @@ $$
 }
 $$
 
-### 分离噪声
+### Noise Separation
 
-将上述预积分公式中得噪声分离出来：
+Separate noise from preintegration:
 
 $$
 \begin{align*}
-  \triangle \mathbf{o}_{ij} &= \sum_{k=i}^{j-1} \triangle \mathrm{R}_{ik} \cdot \mathrm{R}^{B}_{O} \left( 
+  \triangle \mathbf{o}_{ij} &= \sum_{k=i}^{j-1} \triangle \mathrm{R}_{ik} \cdot \mathrm{R}^{B}_{O} \left(
   \tilde{\mathbf{u}}_{k} - \mathbf{\eta}^{ud}_{k}
  \right) \triangle t \\
-&= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} \left( 
+&= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} \left(
   \mathbf{I} - \delta\phi_{ik}^{\wedge} \right) \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t
    - \triangle  \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \mathbf{\eta}_{k}^{ud} \triangle t \\
-&= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t + \sum_{k=i}^{j-1} \left[ 
-  \triangle \tilde{\mathrm{R}}_{ik} \left( 
+&= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t + \sum_{k=i}^{j-1} \left[
+  \triangle \tilde{\mathrm{R}}_{ik} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k}
    \right)^{\wedge} \delta \phi_{ik} \triangle t - \triangle \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \mathbf{\eta}_{k}^{ud} \triangle t
- \right] \\ 
+ \right] \\
 &= \triangle \tilde{\mathbf{o}}_{ij} - \delta \mathbf{o}_{ij}
 \end{align*}
 $$
 
-其中：
+Where:
 
 $$
 \begin{align*}
@@ -109,56 +109,55 @@ $$
 \end{align*}
 $$
 
-
-### 噪声传播
+### Noise Propagation
 
 $$
 \begin{align*}
- \delta \mathbf{o}_{ij} &= \sum_{k=i}^{j-1} \left[ 
-  -\triangle \tilde{\mathrm{R}}_{ik} \left( 
+ \delta \mathbf{o}_{ij} &= \sum_{k=i}^{j-1} \left[
+  -\triangle \tilde{\mathrm{R}}_{ik} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k}
    \right)^{\wedge} \delta \phi_{ik} \triangle t + \triangle \tilde{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \mathbf{\eta}_{k}^{ud} \triangle t
  \right] \\
 &= \sum_{k=i}^{j-2} \left[
-  -\triangle \tilde{\mathrm{R}}_{ik} \left( 
+  -\triangle \tilde{\mathrm{R}}_{ik} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k}
    \right)^{\wedge} \delta \phi_{ik} \triangle t + \triangle \tilde{\mathrm{R}}_{ik} \mathbf{\eta}_{k}^{ud} \mathrm{R}^{B}_{O} \triangle t
  \right] \\
-&- \triangle \tilde{\mathrm{R}}_{ij-1} \left( 
+&- \triangle \tilde{\mathrm{R}}_{ij-1} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{j-1}
    \right)^{\wedge} \delta \phi_{ij-1} \triangle t + \triangle \tilde{\mathrm{R}}_{ij-1} \mathrm{R}^{B}_{O} \mathbf{\eta}_{j-1}^{ud} \triangle t \\
-&= \delta \mathbf{o}_{ij-1} - \triangle \tilde{\mathrm{R}}_{ij-1} \left( 
+&= \delta \mathbf{o}_{ij-1} - \triangle \tilde{\mathrm{R}}_{ij-1} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{j-1}
    \right)^{\wedge} \delta \phi_{ij-1} \triangle t + \triangle \tilde{\mathrm{R}}_{ij-1} \mathrm{R}^{B}_{O} \mathbf{\eta}_{j-1}^{ud} \triangle t
 \end{align*}
 $$
 
-令预积分的噪声向量为:
+Define preintegration noise vector:
 
 $$
 \delta \mathbf{\eta}_{ik}^{\triangle} = \left[ \delta \mathbf{\phi}_{ik}, \delta \mathbf{v}_{ik}, \delta \mathbf{p}_{ik}, \delta \mathbf{o}_{ik} \right] \in \mathbb{R}^{12}
 $$
 
-传感器噪声为：
+Sensor noise:
 
 $$
 \mathbf{\eta}_{k}^{d} = \left[ \mathbf{\eta}_{k}^{gd}, \mathbf{\eta}_{k}^{ad}, \mathbf{\eta}_{k}^{ud} \right] \in \mathbb{R}^{3 \times 3} =  \in \mathbb{R}^{9}
 $$
 
-则预积分噪声的递推公式为：
+Preintegration noise recursion:
 
 $$
 \delta \mathbf{\eta}_{ij}^{\triangle} = \mathbf{A}_{j-1} \delta \mathbf{\eta}_{ij-1}^{\triangle} + \mathbf{B}_{j-1} \mathbf{\eta}_{j-1}^{d}
-$$ 
+$$
 
-则：
+Where:
 
 $$
 \mathbf{A}_{j-1} = \begin{bmatrix}
   \triangle \tilde{\mathrm{R}}_{j-1 j}^{T} & 0 & 0 & 0 \\
   -\triangle \tilde{\mathrm{R}}_{i j-1} \left( \tilde{\mathbf{a}}_{j-1} - \mathbf{b}_{i}^{a} \right)^{\wedge} \triangle t & \mathbf{I} & 0 & 0 \\
   -\frac{1}{2} \triangle \tilde{\mathrm{R}}_{i j-1} \left( \tilde{\mathbf{a}}_{j-1} - \mathbf{b}_{i}^{a} \right)^{\wedge} \triangle t^{2} & \triangle t \mathbf{I} & 0 & 0 \\
-  -\triangle \tilde{\mathrm{R}}_{ij-1} \left( 
+  -\triangle \tilde{\mathrm{R}}_{ij-1} \left(
      \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{j-1}
    \right)^{\wedge} \triangle t & 0 & 0 & 0
 \end{bmatrix}  \in \mathbb{R}^{12 \times 12}
@@ -173,7 +172,7 @@ $$
 \end{bmatrix}  \in \mathbb{R}^{12 \times 9}
 $$
 
-协方差矩阵递推公式为：
+Covariance matrix recursion:
 
 $$
 \mathbf{\Sigma}_{ij} = \mathbf{A}_{j-1} \mathbf{\Sigma}_{ij-1} \mathbf{A}_{j-1}^{T} + \mathbf{B}_{j-1} \mathbf{\Sigma}_{\mathbf{\eta}}\mathbf{B}_{j-1}^{T}  \in \mathbb{R}^{12 \times 12}
@@ -183,69 +182,69 @@ $$
 \mathbf{\Sigma}_{\mathbf{\eta}} \in \mathbb{R}^{9 \times 9}
 $$
 
-### 偏置更新
+### Bias Update
 
 $$
 \triangle \tilde{\mathbf{o}}_{ij} \left( \mathbf{b}_{i}^{g} \right) \simeq \triangle \tilde{\mathbf{o}}_{ij} \left( \bar{\mathbf{b}}_{i}^{g} \right) + \frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}} \delta \mathbf{b}_{i}^{g}
 $$
 
-其中：
+Where:
 
 $$
 \bar{\mathbf{o}}_{ij} = \tilde{\mathbf{o}}_{ij} \left( \bar{\mathbf{b}}_{i} \right)
 $$
 
-当偏置进行更新：
+When bias updates:
 
 $$
 \hat{\mathbf{b}}_{i} \leftarrow \bar{\mathbf{b}}_{i} + \delta \mathbf{b}_{i}
 $$
 
-相应的预积分进行更新：
+Corresponding preintegration update:
 
 $$
 \begin{align*}
 \tilde{\mathbf{o}}_{ij} (\hat{\mathbf{b}}_{i}) &= \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{ik} (\hat{\mathbf{b}}_{i}) \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t \\
 &= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \mathbf{Exp} \left( \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g} \right) \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t \\
-&= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( 
-  \mathbf{I} + \left( 
+&= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left(
+  \mathbf{I} + \left(
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}
    \right)^{\wedge}
  \right) \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t \\
-&= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t + \sum_{k=i}^{j-1} \triangle  \bar{\mathrm{R}}_{ik} \left( 
+&= \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t + \sum_{k=i}^{j-1} \triangle  \bar{\mathrm{R}}_{ik} \left(
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}
    \right)^{\wedge} \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \triangle t \\
-&= \triangle \bar{\mathbf{o}}_{ij} + \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( 
+&= \triangle \bar{\mathbf{o}}_{ij} + \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left(
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}
    \right)^{\wedge} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right) \triangle t \\
-&= \triangle \bar{\mathbf{o}}_{ij} - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge} \left( 
+&= \triangle \bar{\mathbf{o}}_{ij} - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge} \left(
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}
    \right) \triangle t \\
-&= \triangle \bar{\mathbf{o}}_{ij} - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge} 
+&= \triangle \bar{\mathbf{o}}_{ij} - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge}
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \triangle t  \cdot \delta \mathbf{b}_{i}^{g} \\
 &= {\color{red} \triangle \bar{\mathbf{o}}_{ij} + \frac{\partial{\triangle \bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}^{g}}} \delta \mathbf{b}_{i}^{g}}
 \end{align*}
 $$
 
-所以：
+Thus:
 
 $$
-\frac{\partial{\triangle \bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}^{g}}} = - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge} 
+\frac{\partial{\triangle \bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}^{g}}} = - \sum_{k=i}^{j-1} \triangle \bar{\mathrm{R}}_{ik} \left( \mathrm{R}^{B}_{O} \tilde{\mathbf{u}}_{k} \right)^{\wedge}
     \frac{\partial{\triangle \bar{\mathrm{R}}_{ik}}}{\partial{\mathbf{b}^{g}}} \triangle t
 $$
 
-### 预积分残差项
+### Preintegration Residual
 
 $$
 \begin{align*}
 \mathbf{r}_{\triangle \mathbf{o}_{ij}} &= \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} \\
 &- \left( \triangle \tilde{\mathbf{o}}_{ij} \left( \bar{\mathbf{b}}_{i}^{g} \right) + \frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}} \delta \mathbf{b}_{i}^{g} \right)  \\
 &= \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} \\
-&- \left( \triangle \bar{\mathbf{o}}_{ij} + \frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}} \delta \mathbf{b}_{i}^{g} \right) 
+&- \left( \triangle \bar{\mathbf{o}}_{ij} + \frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}} \delta \mathbf{b}_{i}^{g} \right)
 \end{align*}
 $$
 
-#### 雅各比求解
+#### Jacobian Derivation
 
 $$
 \begin{array}{l}
@@ -256,7 +255,7 @@ $$
 \end{array}
 $$
 
-- 对 $$ \delta \mathbf{p}_{i} $$
+- W.r.t $$ \delta \mathbf{p}\_{i} $$
 
 $$
 \begin{align*}
@@ -266,13 +265,13 @@ $$
 \end{align*}
 $$
 
-所以：
+Thus:
 
 $$
 \frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{p}_{i}}} = -\mathbf{I}_{3 \times 1}
 $$
 
-- 对 $$ \delta \mathbf{p}_{j} $$
+- W.r.t $$ \delta \mathbf{p}\_{j} $$
 
 $$
 \begin{align*}
@@ -282,47 +281,47 @@ $$
 \end{align*}
 $$
 
-所以：
+Thus:
 
 $$
 \frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{p}_{i}}} = \mathrm{R}_{i}^{T} \mathrm{R}_{j}
 $$
 
-- 对 $$ \delta \mathbf{v}_{i} $$
+- W.r.t $$ \delta \mathbf{v}\_{i} $$
 
 $$
-\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{v}_{i}}} = 0 
+\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{v}_{i}}} = 0
 $$
 
-- 对 $$ \delta \mathbf{v}_{j} $$
+- W.r.t $$ \delta \mathbf{v}\_{j} $$
 
 $$
-\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{v}_{j}}} = 0 
+\frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \mathbf{v}_{j}}} = 0
 $$
 
-- 对 $$ \delta \mathbf{\phi}_{i} $$
+- W.r.t $$ \delta \mathbf{\phi}\_{i} $$
 
 $$
 \begin{align*}
 \mathbf{r}_{\triangle \mathbf{o}_{ij}} \left( \mathrm{R}_{i} \mathbf{Exp} (\delta \phi_{i}) \right) &= \left[ \mathrm{R}_{i} \mathbf{Exp} (\delta \phi_{i}) \right]^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \left[ \mathrm{R}_{i} \mathbf{Exp} (\delta \phi_{i}) \right]^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} + C \\[2mm]
 &= \left( \mathbf{I} - \delta \phi_{i}^{\wedge} \right) \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \left( \mathbf{I} - \delta \phi_{i}^{\wedge} \right) \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} + C \\[2mm]
 &= \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} + C \\
-&+ \left( -\delta \phi_{i}^{\wedge} \right) \mathrm{R}_{i}^{T} \left( 
+&+ \left( -\delta \phi_{i}^{\wedge} \right) \mathrm{R}_{i}^{T} \left(
    \mathbf{p}_{j} - \mathbf{p}_{i} + \mathrm{R}_{j} \mathbf{t}_{O}^{B}
  \right) \\[2mm]
-&= \mathbf{r}_{\triangle \mathbf{o}_{ij}} + \left[ \mathrm{R}_{i}^{T} \left( 
+&= \mathbf{r}_{\triangle \mathbf{o}_{ij}} + \left[ \mathrm{R}_{i}^{T} \left(
    \mathbf{p}_{j} - \mathbf{p}_{i} + \mathrm{R}_{j} \mathbf{t}_{O}^{B}
  \right) \right]^{\wedge} \delta \phi_{i}
 \end{align*}
 $$
 
-注：
+Note:
 
 $$
 \mathbf{Exp} (\phi)^{T} \simeq (\mathbf{I} + \phi^{\wedge})^{T} = \mathbf{I} + (\phi ^{\wedge})^{T} = \mathbf{I} - \phi^{\wedge}
 $$
 
-- 对 $$ \delta \mathbf{\phi}_{j} $$
+- W.r.t $$ \delta \mathbf{\phi}\_{j} $$
 
 $$
 \begin{align*}
@@ -332,21 +331,22 @@ $$
 &= \mathrm{R}_{i}^{T} \left( \mathbf{p}_{j} - \mathbf{p}_{i} \right) - \mathbf{t}_{O}^{B} + \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathbf{t}_{O}^{B} + C - \mathrm{R}_{i}^{T} \mathrm{R}_{j} (\mathbf{t}_{O}^{B})^{\wedge} \delta \phi_{j}
 \end{align*}
 
+
 $$
 
-所以：
+Thus:
 
 $$
 \frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\delta \phi_{j}}} = - \mathrm{R}_{i}^{T} \mathrm{R}_{j} (\mathbf{t}_{O}^{B})^{\wedge}
 $$
 
-- 对 $$ \tilde{\delta} \mathbf{b}_{i}^{g} $$
+- W.r.t $$ \tilde{\delta} \mathbf{b}\_{i}^{g} $$
 
 $$
 \frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\tilde{\delta} \mathbf{b}_{i}^{g}}} = -\frac{\partial{\bar{\mathbf{o}}_{ij}}}{\partial{\mathbf{b}_{i}^{g}}}
 $$
 
-- 对 $$ \tilde{\delta} \mathbf{b}_{i}^{a} $$
+- W.r.t $$ \tilde{\delta} \mathbf{b}\_{i}^{a} $$
 
 $$
 \frac{\partial{\mathbf{r}_{\triangle \mathbf{o}_{ij}}}}{\partial{\tilde{\delta} \mathbf{b}_{i}^{a}}} = 0

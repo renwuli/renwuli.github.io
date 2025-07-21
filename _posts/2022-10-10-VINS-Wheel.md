@@ -12,13 +12,13 @@ Paper: Visual-Inertial Odometry Tightly Coupled with Wheel Encoder Adopting Robu
 
 PDF: <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8967607">https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8967607</a>
 
-## 主要贡献：
-- 在预积分阶段融合IMU和轮速计，4-DoF非线性优化得到更加准确的尺度
-- IMU-Camera-轮速计的联合初始化方法
-- 在线标定IMU-轮速计外参
+## Main Contributions:
+- Fusion of IMU and wheel encoder at the preintegration stage, achieving more accurate scale through 4-DoF nonlinear optimization
+- Joint initialization method for IMU-Camera-Wheel encoder
+- Online calibration of IMU-Wheel encoder extrinsic parameters
 
-## 硬件设置：
-后驱四轮车（当前面两个轮子旋转时，后面两个轮子的朝向不改变），轮速计安装在后左车轮。左后轮的速度方向始终朝向y轴。
+## Hardware Setup:
+Rear-wheel-drive four-wheeled vehicle (rear wheels maintain fixed orientation when front wheels rotate), wheel encoder installed on rear-left wheel. Velocity direction of left rear wheel always aligns with the y-axis.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -29,16 +29,13 @@ PDF: <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8967607">
     Figure 1
 </div>
 
+## Workflow
+Initialization → Align sensor coordinate systems with gravity direction, create initial map → IMU and wheel encoder preintegration, feature extraction and tracking → Sliding window nonlinear optimization → Compute current frame's pvq
 
-## 流程
-初始化 → 传感器坐标系与重力方向对齐，创建初始地图 → IMU、轮速计预积分，特征点提取与跟踪 → 滑动窗口非线性优化 → 当前帧的pvq计算得到
+After initialization completes, extrinsic parameters are fixed and no longer updated.
 
-当初始化结束之后，外参便写死不再改变
-
-
-
-### A. 预积分
-其实是VINS-MONO预积分公式的扩展（加入轮速计）
+### A. Preintegration
+Extension of VINS-MONO preintegration formulas (incorporating wheel encoder)
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -49,11 +46,11 @@ PDF: <a href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8967607">
     Figure 2
 </div>
 
-在初始阶段，$$ \hat{\alpha}_i^i, \hat{\beta}^i_i, \hat{\eta}^i_i $$ 均为0，而 $$ \hat{\gamma}^i_i $$ 为单位四元数。
+At initial stage, $$ \hat{\alpha}_i^i, \hat{\beta}^i_i, \hat{\eta}^i_i $$ are all zero, while $$ \hat{\gamma}^i_i $$ is the identity quaternion.
 
 > Joan Sola. Quaternion kinematics for the error-state kalman filter. arXiv preprint arXiv:1711.02508, 2017.
 
-参考上文，使用扰动方式计算出运动学公式，推导出协方差矩阵：
+Using perturbation methods to derive kinematic equations and compute covariance matrix:
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -72,7 +69,7 @@ $$
 \Sigma_{i, l+1} = B_{i,l}QB_{i,l}^T+A_{i,l}\Sigma_{i,l}A_{i,l}^T
 $$
 
-和VINS-MONO的对比下来看一下：
+Comparison with VINS-MONO:
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -83,16 +80,15 @@ $$
     Figure 4
 </div>
 
-这里面也讨论了一下VINS-MONO初始化的问题：
-> The initailization procedure of VINS is well-designed, but prone to error for a car with a monocular camera facing forward moving at approximately constant velocity.
+Discusses VINS-MONO initialization limitations:
+> The initialization procedure of VINS is well-designed, but prone to error for a car with a monocular camera facing forward moving at approximately constant velocity.
 
-也就是说，如果车子以近似恒速的状态向前运动，VINS-MONO往往会出错。
+This indicates that when a vehicle moves forward at near-constant velocity, VINS-MONO often fails.
 
-### B. 初始化
+### B. Initialization
 
-#### 陀螺仪bias
-
-先像VINS-MONO一样做SFM，得到up-to-scale的视觉structure，然后与IMU进行手眼标定，通过旋转约束最小二乘计算得到陀螺仪的bias：
+#### Gyroscope Bias
+First perform SFM like VINS-MONO to obtain up-to-scale visual structure, then calibrate with IMU using rotation constraints via least squares to compute gyroscope bias:
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -103,10 +99,9 @@ $$
     Figure 5
 </div>
 
-得到新的陀螺仪bias $$ \mathrm{b}_w $$ 之后，重新预积分，以避免使用不精确的陀螺仪bias引入的累计误差。
+After obtaining new gyroscope bias $$ \mathrm{b}_w $$, recompute preintegration to avoid accumulated errors from inaccurate bias.
 
-
-#### 修正重力方向和初始化速度
+#### Refine Gravity Direction and Initialize Velocity
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -117,7 +112,7 @@ $$
     Figure 6
 </div>
 
-依然是和VINS-MONO类似的方程：
+Equations similar to VINS-MONO:
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -128,22 +123,22 @@ $$
     Figure 7
 </div>
 
-因为轮速计的$XY$平面在定义时是和car的机壳水平的，所以可以近似地认为轮速计的 $$ Z $$ 方向是和重力方向一致的，将其转到body-imu坐标系下得到重力的初始值：
+Since wheel encoder's XY plane is defined level with car body, its Z-axis approximately aligns with gravity direction. Transform to body-IMU frame for initial gravity:
 
 $$
 g_0^{b0} = R_o^b[0 ~ 0 ~ g]^T
 $$
 
-之后进行重力方向的修正（重力的大小已知），和VINS-MONO类似，将重力方向在切平面处过参数化，引入两个新的切向量，进行优化：
+Refine gravity direction (known magnitude) similar to VINS-MONO by over-parameterizing in tangent plane with two new tangent vectors:
 
 $$
 g^{b0} = g_0^{b0}+B\triangle g
 $$
 
-其中，$B$即为这两个切向量的基。
+where $B$ is the basis formed by these tangent vectors.
 
-### C. 非线性优化
-cost function由三个部分组成：边缘化的term，重投影误差的term和IMU-轮速计的term。
+### C. Nonlinear Optimization
+Cost function comprises three terms: marginalization term, reprojection error term, and IMU-wheel encoder term.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -154,7 +149,7 @@ cost function由三个部分组成：边缘化的term，重投影误差的term�
     Figure 8
 </div>
 
-其中 $$ e_s^k $$ 是IMU-轮速计的residual，是我们重点关注的：
+The term $$ e_s^k $$ (IMU-wheel encoder residual) is our focus:
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -165,17 +160,16 @@ cost function由三个部分组成：边缘化的term，重投影误差的term�
     Figure 9
 </div>
 
-上式对 $$ b_{a_k}, b_{w_k} $$ 和 $$ R_o^b $$ 求导，再求解到最优解。
+Differentiate w.r.t $$ b_{a_k}, b_{w_k} $$ and $$ R_o^b $$, then solve for optimal solution.
 
-### D. 在线外参标定
-分为两个外参：camera-imu外参和imu-odemetry外参。但是作者也说了，当整个系统没有良好的约束时（比如缺乏旋转、IMU没有良好的激励），动态地调整外参可能会导致系统运行失败。
+### D. Online Extrinsic Calibration
+Two extrinsics: camera-IMU and IMU-odometry. Authors note that dynamic extrinsic adjustment may fail under poor constraints (e.g., lack of rotation, insufficient IMU excitation).
 
 > Consider that one cannot distinguish the direction of local gravity from that of the accelerometer bias when there is no rotational motion, which is pointed out in [6]. That is to say, the lack of constraints will result in the unstable estimation of accelerometer bias. Conversely, the convergence of accelerometer bias indicates that the system has become well-constrained. 
 
-**当加速度计的bias很好地收敛，那就意味着整个系统有良好的约束。**
+**Convergence of accelerometer bias indicates sufficient system constraints.**
 
-
-## 参考文献
+## References
 [1] Tong Qin, Peiliang Li, and Shaojie Shen. Vins-mono: A robust and versatile monocular visual-inertial state estimator. IEEE Transactions on Robotics, 34(4):1004–1020, 2018.
 
 [2] Meixiang Quan, Songhao Piao, Minglang Tan, and Shi-Sheng Huang. Tightly-coupled monocular visual-odometric slam using wheels and a mems gyroscope. arXiv preprint arXiv:1804.04854, 2018.

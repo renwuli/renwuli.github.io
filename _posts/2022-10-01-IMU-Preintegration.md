@@ -8,10 +8,10 @@ categories: SLAM
 toc: true
 ---
 
-本文基于Foster2016年发表在 *IEEE Transactions on Robotics* 上的一篇文章：*On-Manifold Preintegration for Real-Time Visual-Inertial Odometry*。
+This article is based on Foster's 2016 paper *On-Manifold Preintegration for Real-Time Visual-Inertial Odometry* published in *IEEE Transactions on Robotics*.
 
-## IMU噪声模型
-6自由度的IMU有三轴加速度和三轴角速度。
+## IMU Noise Model
+A 6-DOF IMU measures three-axis acceleration and three-axis angular velocity.
 
 $$
 _{B}\widetilde{\omega}_{WB}(t) = _{B}\omega_{WB}(t) + \mathrm{b}^{g}(t) + \mathrm{\eta}^{g}(t)
@@ -21,9 +21,9 @@ $$
 _{B}\widetilde{a}(t) = \mathrm{R}_{WB}^{T}(t)(_{W}\mathrm{a}(t) - _{W}\mathrm{g}) + \mathrm{b}^{a}(t) + \mathrm{\eta}^{a}(t)
 $$
 
-以上分别为IMU坐标系下的角速度和加速度，IMU系的加速度为世界坐标系下的加速度去除重力加速的影响再转到IMU坐标系，上面的表达都忽略了地球的自转。加速度和角速度都各自受其偏置和随机游走噪声影响，这里认为偏置和随机游走噪声都是关于时间的函数，也就是说偏置和噪声不是一成不变的。
+The equations above represent angular velocity and acceleration in the IMU frame. The IMU-frame acceleration is obtained by removing the gravitational acceleration from the world-frame acceleration and then transforming it to the IMU frame. Earth's rotation is neglected. Both acceleration and angular velocity are affected by their respective biases and random walk noise, modeled as time-varying quantities.
 
-## IMU运动模型
+## IMU Motion Model
 
 $$
 \dot{\mathrm{R}}_{WB} = \mathrm{R}_{WB} ~ _{B} \omega_{WB}^{\wedge}
@@ -37,27 +37,26 @@ $$
 _{W} \dot{\mathrm{p}} = _{W}\mathrm{v}
 $$
 
-
-## 相邻时刻的RVP递推
-IMU自身坐标系到世界坐标系的旋转：
+## Recursive Propagation of R, V, P Between Consecutive Timesteps
+Rotation from IMU frame to world frame:
 
 $$
 \mathrm{R}_{WB}(t + \triangle t) = \mathrm{R}_{WB} \mathrm{Exp}\left( \int_{t}^{t + \triangle t} { _{B}\omega_{WB}(\tau) d\tau} \right)
 $$
 
-世界坐标系下的速度：
+Velocity in world frame:
 
 $$
 _{W} \mathrm{v}(t + \triangle t) = _{W} \mathrm{v}(t) + \int_{t}^{t + \triangle t} {_{W} \mathrm{a} (\tau) d\tau}
 $$
 
-世界坐标系下的位移：
+Position in world frame:
 
 $$
 _{W} \mathrm{p}(t + \triangle t) = _{W} \mathrm{p}(t) + \int_{t}^{t + \triangle t} {_{W} \mathrm{v} (\tau) d\tau} + \iint_{t}^{t + \triangle t} {_{W} \mathrm{a}(\tau) d\tau^{2}}
 $$
 
-以上是相邻时刻IMU的三个状态的递推，如果我们假设在$$ [t, t + \triangle t] $$内，世界坐标系下的加速度 $$ _{W}\mathrm{a} $$ 和IMU坐标系下的角速度 $$ _{B}\omega _{WB} $$ 保持恒定，那么可以将上述连续形式下的递推改写为如下离散形式：
+The above equations propagate the IMU state (Rotation, Velocity, Position) between consecutive timesteps. Assuming constant world-frame acceleration $$ _{W}\mathrm{a} $$ and constant IMU-frame angular velocity $$ _{B}\omega _{WB} $$ over $$ [t, t + \triangle t] $$, we discretize:
 
 $$
 \mathrm{R}_{WB} (t + \triangle t) = \mathrm{R}_{WB} (t) \mathrm{Exp} \left( _{B}\omega _{WB}(t) \triangle t \right)
@@ -71,7 +70,7 @@ $$
 _{W}\mathrm{p}(t + \triangle t) = _{W}\mathrm{p}(t) + _{W}\mathrm{v}(t) \triangle t + \frac{1}{2} _{W}\mathrm{a}(t) \triangle t^{2}
 $$
 
-将$$ \mathrm{R}_{WB} $$ 记作$$ \mathrm{R} $$，默认速度 $$\mathrm{v} $$、位移 $$\mathrm{p}$$、重力加速度 $$\mathrm{g}$$ 和加速度 $$\mathrm{a}$$ 为世界坐标系下的量，而角速度 $$\omega$$ 为IMU坐标系下的量，则：
+Adopting simplified notation: $$\mathrm{R}_{WB} \rightarrow \mathrm{R}$$, with $$\mathrm{v}$$ (velocity), $$\mathrm{p}$$ (position), $$\mathrm{g}$$ (gravity), and $$\mathrm{a}$$ (acceleration) in world frame, and $$\omega$$ (angular velocity) in IMU frame:
 
 $$
 \mathrm{R} (t + \triangle t) = \mathrm{R} (t) \mathrm{Exp} \left( \omega (t) \triangle t \right)
@@ -85,21 +84,20 @@ $$
 \mathrm{p}(t + \triangle t) = \mathrm{p}(t) + \mathrm{v}(t) \triangle t + \frac{1}{2} \mathrm{a}(t) \triangle t^{2}
 $$
 
-考虑噪声模型，有：
+Incorporating the noise model:
 $$
 \mathrm{R} (t + \triangle t) = \mathrm{R} (t) \mathrm{Exp} \left( \left( \tilde{\omega} - \mathrm{b}^{g}(t) - \mathrm{\eta}^{gd}(t) \right)  (t) \triangle t \right)
 $$
 
 $$
-\mathrm{v}(t + \triangle t) = \mathrm{v}(t) + \mathrm{g}\triangle t + \left( \tilde{\mathrm{a}}(t) - \mathrm{b}^{a}(t) - \mathrm{\eta}^{ad}(t) \right)  \triangle t
+\mathrm{v}(t + \triangle t) = \mathrm{v}(t) + \mathrm{g}\triangle t + \mathrm{R}(t)\left( \tilde{\mathrm{a}}(t) - \mathrm{b}^{a}(t) - \mathrm{\eta}^{ad}(t) \right)  \triangle t
 $$
 
 $$
 \mathrm{p}(t + \triangle t) = \mathrm{p}(t) + \mathrm{v}(t) \triangle t + \frac{1}{2}  \mathrm{g}\triangle t^{2} + \frac{1}{2} \mathrm{R}(t) \left( \tilde{\mathrm{a}}(t) - \mathrm{b}^{a}(t) - \mathrm{\eta}^{ad}(t) \right) \triangle t^{2}
 $$
 
-
-## 关键帧之间的RVP递推
+## R, V, P Propagation Between Keyframes
 
 $$
 \mathrm{R}_{j} = \mathrm{R}_{i} \prod_{k=i}^{j-1} \mathrm{Exp} \left( \left( \tilde{\omega}_{k} - \mathrm{b}_{k}^{g} - \mathrm{\eta}_{k}^{gd} \right) \triangle t \right)
@@ -113,11 +111,11 @@ $$
 \mathrm{p}_{j} = \mathrm{p}_{i} + \sum_{k=i}^{j-1} \left[ \mathrm{v}_{k} \triangle t + \frac{1}{2} \mathrm{g} \triangle t^{2} + \frac{1}{2} \mathrm{R}_{k} \left( \tilde{\mathrm{a}}_{k} - \mathrm{b}_{k}^{a} - \mathrm{\eta}_{k}^{ad} \right) \triangle t^{2}  \right]
 $$
 
-借助上面三个公式，假如已知 $$i$$ 时刻的RVP状态，就可以推得 $$j$$ 时刻的RVP状态，但是在优化过程中，一旦 $$\mathrm{R}_{i}$$ 发生变化，要求得 $$j$$ 时刻的RVP状态，需要重新进行高计算量的积分，因此引入预积分，只需要将 $$\triangle  \mathrm{R}_{ij}$$ 这个中间增量求出来即可。
+These equations propagate the state from keyframe $$i$$ to keyframe $$j$$. However, during optimization, if $$\mathrm{R}_{i}$$ changes, recomputing the integral for $$j$$ is computationally expensive. Preintegration solves this by computing intermediate increments ($$\triangle  \mathrm{R}_{ij}$$, $$\triangle \mathrm{v}_{ij}$$, $$\triangle \mathrm{p}_{ij}$$) only once.
 
-## 预积分
+## Preintegration
 
-将第 $$i$$ 时刻的状态和重力加速度分离出来
+Factor out the state at time $$i$$ and gravity:
 
 $$
 \triangle  \mathrm{R}_{ij} = \mathrm{R}_{i}^{T} \mathrm{R}_{j} = \prod_{k=i}^{j-1} \mathrm{Exp} \left( \left( \tilde{\omega}_{k} - \mathrm{b}_{k}^{g} - \mathrm{\eta}_{k}^{gd} \right) \triangle t \right)
@@ -127,29 +125,31 @@ $$
 \mathrm{v}_{j} - \mathrm{v}_{i} - \mathrm{g} \triangle t_{ij} = \sum_{k=i}^{j-1} \mathrm{R}_{k} \left( \tilde{\mathrm{a}}_k - \mathrm{b}_k^{a} - \mathrm{\eta}_k^{ad} \right) \triangle t 
 $$
 
-转换到第 $$i$$ 时刻的IMU坐标系，得：
+Transform to the IMU frame at time $$i$$:
 
 $$
 \begin{align*}
 \triangle \mathrm{v}_{ij} &= \mathrm{R}_{i}^{T} \left( \mathrm{v}_{j} - \mathrm{v}_{i} - \mathrm{g} \triangle t_{ij} \right) \\
-&= \sum_{k=i}^{j-1} \mathrm{R}_{ik} \left( \tilde{\mathrm{a}}_k - \mathrm{b}_k^{a} - \mathrm{\eta}_k^{ad} \right) \triangle t 
+&= \sum_{k=i}^{j-1} \mathrm{R}_{i}^{T}\mathrm{R}_{k} \left( \tilde{\mathrm{a}}_k - \mathrm{b}_k^{a} - \mathrm{\eta}_k^{ad} \right) \triangle t  \\
+&= \sum_{k=i}^{j-1} \triangle \mathrm{R}_{ik} \left( \tilde{\mathrm{a}}_k - \mathrm{b}_k^{a} - \mathrm{\eta}_k^{ad} \right) \triangle t
 \end{align*}
 $$
 
-同理：
+Similarly for position:
 
 $$
 \begin{align*}
 \triangle \mathrm{p}_{ij} &= \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right) \\
-&= \sum_{k=i}^{j-1} \left[ \mathrm{v}_{ik} \triangle t + \frac{1}{2} \triangle \mathrm{R}_{ik} \left( \tilde{\mathrm{a}}_{k} - \mathrm{b}_{k}^{a} - \mathrm{\eta}_{k}^{ad} \right) \triangle t^{2} \right]
+&= \sum_{k=i}^{j-1} \left[ \mathrm{R}_{i}^{T}\mathrm{v}_{k} \triangle t + \frac{1}{2} \mathrm{R}_{i}^{T}\mathrm{R}_{k} \left( \tilde{\mathrm{a}}_{k} - \mathrm{b}_{k}^{a} - \mathrm{\eta}_{k}^{ad} \right) \triangle t^{2} \right] \\
+&= \sum_{k=i}^{j-1} \left[ \triangle \mathrm{v}_{ik} \triangle t + \frac{1}{2} \triangle \mathrm{R}_{ik} \left( \tilde{\mathrm{a}}_{k} - \mathrm{b}_{k}^{a} - \mathrm{\eta}_{k}^{ad} \right) \triangle t^{2} \right]
 \end{align*}
 $$
 
-由此，上面三个式子的 rhs 便与第 $$i$$ 时刻和重力加速度无关，并且可以直接用第 $$i$$ 关键帧和第 $$j$$ 关键帧之间的IMU数据积分而来。
+The right-hand sides (rhs) of these equations are independent of the state at $$i$$ and gravity. They can be preintegrated directly using IMU measurements between keyframes $$i$$ and $$j$$.
 
-### 分离噪声
+### Noise Separation
 
-将上述预积分公式中的噪声分离出来，我们得到一个 **与噪声无关的项 + 噪声**的形式：
+Separate noise from the preintegration terms to obtain a form: **noise-independent term + noise**:
 
 $$
 \begin{align*}
@@ -170,31 +170,27 @@ $$
 \end{align*}
 $$
 
-其中，$$ \triangle \tilde{\mathrm{R}}_{ij} = \prod_{k=i}^{j-1} \mathrm{Exp} \left(\left(\tilde{\omega}_{k} - \mathrm{b}_{i}^{g}\right) \triangle t \right) $$。
+Where $$ \triangle \tilde{\mathrm{R}}_{ij} = \prod_{k=i}^{j-1} \mathrm{Exp} \left(\left(\tilde{\omega}_{k} - \mathrm{b}_{i}^{g}\right) \triangle t \right) $$ is the noise-free relative rotation increment.
 
-将分离噪声之后的 $$ \triangle \tilde{\mathrm{R}}_{ij} $$ 带入到本节开头的预积分公式中去，可以得到速度和加速度预积分的第二个形式：
+Substituting the noise-separated $$ \triangle \tilde{\mathrm{R}}_{ij} $$ into the original preintegration formulas yields similar forms for velocity and position:
 
 $$
 \triangle \mathrm{v}_{ij} = \triangle \tilde{\mathrm{v}}_{ij} - \delta \mathrm{v}_{ij}
 $$
-
-其中：
-
+where
 $$
-\triangle \tilde{\mathrm{v}_{ij}} = \sum_{k=i}^{j-1} \left[ 
-  \triangle \tilde{\mathrm{R}}_{ij} \left( 
+\triangle \tilde{\mathrm{v}}_{ij} = \sum_{k=i}^{j-1} \left[ 
+  \triangle \tilde{\mathrm{R}}_{ik} \left( 
     \tilde{\mathrm{a}}_{k} - \mathrm{b}_{i}^{a}
    \right) \triangle t
  \right]
 $$
 
-对于位移，同样有：
-
 $$
 \triangle \mathrm{p}_{ij} = \triangle \tilde{\mathrm{p}}_{ij} - \delta \mathrm{p}_{ij}
 $$
 
-将上述三式带入到本节开头的预积分公式中，也就是：
+Substituting these three expressions back into the original preintegration definitions:
 
 $$
 \triangle \mathrm{R}_{ij} = \mathrm{R}_{i}^{T} \mathrm{R}_{j}
@@ -207,7 +203,9 @@ $$
 $$
 \triangle \mathrm{p}_{ij} = \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right)
 $$
-得：
+
+Yields the relationships:
+
 $$
 \triangle \tilde{\mathrm{R}}_{ij} = \mathrm{R}_{i}^{T} \mathrm{R}_{j} \mathrm{Exp} \left( \delta \phi_{ij} \right)
 $$
@@ -220,7 +218,7 @@ $$
 \triangle \tilde{\mathrm{p}}_{ij} = \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right) + \delta \mathrm{p}_{ij}
 $$
 
-那么预积分噪声向量便可定义为：
+The preintegration noise vector is thus defined as:
 
 $$
 \mathrm{\eta}_{ij}^{\triangle} =
@@ -229,8 +227,8 @@ $$
 \end{bmatrix}^{T}
 $$
 
-### 噪声传播
-对预积分噪声 $$ \mathrm{\eta}_{ij}^{\triangle} $$ 做一阶近似，得:
+### Noise Propagation
+Applying first-order approximation to the preintegration noise $$ \mathrm{\eta}_{ij}^{\triangle} $$:
 
 $$
 \delta \phi_{ij} \simeq \sum_{k=i}^{j-1} \triangle \tilde{\mathrm{R}}_{k+1 j}^{T} \mathrm{J}_{r}^{k} \eta_{k}^{gd} \triangle t
@@ -253,11 +251,11 @@ $$
  \right]
 $$
 
-上式说明预积分噪声 $$ \mathrm{\eta}_{ij}^{\triangle} $$ 是关于IMU测量模型 $$ \mathrm{\eta}_{k}^{d} = \left[ \mathrm{\eta}_{k}^{gd}, \mathrm{\eta}_{k}^{ad} \right] $$ 的线性函数，因此，若已知IMU噪声 $$ \mathrm{\eta}_{k}^{d} $$ 的协方差矩阵，那么预积分噪声的协方差矩阵可以自然而然推出来。
+These equations show that the preintegration noise $$ \mathrm{\eta}_{ij}^{\triangle} $$ is a linear function of the IMU measurement noise $$ \mathrm{\eta}_{k}^{d} = \left[ \mathrm{\eta}_{k}^{gd}, \mathrm{\eta}_{k}^{ad} \right] $$. Therefore, if the covariance matrix of the IMU noise $$ \mathrm{\eta}_{k}^{d} $$ is known, the covariance matrix of the preintegration noise can be derived.
 
-### 偏置更新
+### Bias Update
 
-在之前的内容中都假设偏置在关键帧 $$ i $$ 和关键帧  $$ j $$ 内是一成不变的，但实际上这是不可能滴。如果在偏置每次改变的时候都重新计算一下IMU观测和预积分，那是大大得耗费资源，是不可取滴。所以这里也把预积分项改写为关于偏置的一阶线性近似函数：
+Previous derivations assumed constant biases between keyframes $$i$$ and $$j$$. In reality, biases drift. Recomputing preintegrals upon every bias change is computationally expensive. Instead, express the preintegrated terms as first-order approximations with respect to bias:
 
 $$
 \begin{align*}
@@ -269,8 +267,13 @@ $$
 \end{align*}
 $$
 
-### 预积分因子
+Here, $$\bar{\mathrm{b}}_{i}^{g}, \bar{\mathrm{b}}_{i}^{a}$$ are the biases at the linearization point, and $$\delta \mathrm{b}^{g}, \delta \mathrm{b}^{a}$$ are small updates.
 
+### Preintegration Factors
+
+The residual errors (factors) used in optimization (e.g., Bundle Adjustment) are:
+
+**Rotation Factor:**
 $$
 \mathrm{r}_{\triangle \mathrm{R}_{ij}} = \mathrm{Log} \left( 
   \left( 
@@ -282,25 +285,26 @@ $$
  \right)
 $$
 
+**Velocity Factor:**
 $$
 \mathrm{r}_{\triangle \mathrm{v}_{ij}} = \mathrm{R}_{i}^{T} \left( \mathrm{v}_{j} - \mathrm{v}_{i} - \mathrm{g} \triangle t_{ij} \right) - \left[ 
   \triangle \tilde{\mathrm{v}}_{ij} (\bar{\mathrm{b}}_{i}^{g}, \bar{\mathrm{b}}_{i}^{a}) + \frac{\partial{\tilde{\mathrm{v}}_{ij}}}{\partial{\mathrm{b}^{g}}} \delta \mathrm{b}^{g} + \frac{\partial{\tilde{\mathrm{v}}_{ij}}}{\partial{\mathrm{b}^{a}} } \delta \mathrm{b}^{a}
  \right]
 $$
 
+**Position Factor:**
 $$
 \mathrm{r}_{\triangle \mathrm{p}_{ij}} = \mathrm{R}_{i}^{T} \left( \mathrm{p}_{j} - \mathrm{p}_{i} - \mathrm{v}_{i} \triangle t_{ij} - \frac{1}{2} \mathrm{g} \triangle t_{ij}^{2}  \right) - \left[ 
   \triangle \tilde{\mathrm{p}}_{ij} (\bar{\mathrm{b}}_{i}^{g}, \bar{\mathrm{b}}_{i}^{a}) + \frac{\partial{\tilde{\mathrm{p}}_{ij}}}{\partial{\mathrm{b}^{g}}} \delta \mathrm{b}^{g} + \frac{\partial{\tilde{\mathrm{p}}_{ij}}}{\partial{\mathrm{b}^{a}} } \delta \mathrm{b}^{a}
  \right]
 $$
 
-## 坐标系
+## Coordinate Systems
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
         {% include figure.html path="assets/img/posts/imu-preintegrated/frames.png" class="img-fluid rounded z-depth-1" zoomable=true %}
     </div>
 </div>
 <div class="caption">
-    Coordinate systems
+    Coordinate systems involved in visual-inertial odometry.
 </div>
-

@@ -2,7 +2,7 @@
 layout: post
 title: SymmetryNet
 date: 2022-04-01 15:00:00
-description: 
+description:
 tags: Symmetry
 categories: Geometry, NN
 toc: true
@@ -19,8 +19,8 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
 
 ## Overview
 
-- 输入：RGB-D
-- 输出：$$M^{\text{ref}}$$ 个镜面对称和 $$M^{\text{rot}}$$ 个旋转对称
+- Input: RGB-D
+- Output: $$M^{\text{ref}}$$ mirror symmetries and $$M^{\text{rot}}$$ rotational symmetries
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -31,41 +31,45 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
     Figure 1
 </div>
 
-总体方法：
-1. 特征提取：RGB图像输入CNN网络中提取逐像素特征，Depth深度图转成点云输入PointNet提取逐点特征，之后将图像特征和点云特征进行Fusion。
-2. 以每个点的特征作为输入，逐点进行对称性预测。
-3. 最后通过aggregation和可视性验证对逐点对称性进行过滤和集成，得到最终的对称性预测结果。
+General approach:
+
+1. Feature extraction: RGB image is input to a CNN to extract per-pixel features, depth map is converted to point cloud and input to PointNet to extract per-point features, then image and point cloud features are fused.
+2. Each point's feature is used to predict symmetry at the point level.
+3. Finally, aggregation and visibility validation are used to filter and integrate pointwise symmetry predictions to obtain the final symmetry prediction results.
 
 ## Introduction
 
-对称性检测可以通过纯几何信息进行求解，比如先建立点到点之间的对应关系，得到大量的点对之间的对称性变换，然后通过霍夫投票得到全局的对称性 $$ \rightarrow $$ 但是这种方法在single-view（几何信息不足，partial observation and object occlusion）的情况下面临挑战，有可能找不到局部的对称点对来支撑全局的对称性 $$ \rightarrow $$ 所以当前的对称性检测不仅仅需要依赖几何信息，也需要来自于统计分析（也就是从大量数据中去学习patten）。
+Symmetry detection can be solved using pure geometric information, e.g., first establishing point-to-point correspondences to obtain many symmetric transformations between point pairs, then using Hough voting to obtain global symmetries. $$\rightarrow$$ However, this method faces challenges in single-view (insufficient geometric information, partial observation and object occlusion) scenarios, where it may be impossible to find enough local symmetric point pairs to support global symmetry. $$\rightarrow$$ Therefore, current symmetry detection needs to rely not only on geometric information but also on statistical analysis (i.e., learning patterns from large amounts of data).
 
 ## Methods
 
-该文claim一旦3D模型的几何已知，那么得到它的对称性是分分钟的事情（真的这么简单吗？我看未必）。传统的对称性检测方法通常先建立点或者组件之间的correspondence，然后再aggragate得到对称性。但是single-view的表征通常是不完整和视角受限的。在不完整几何上做对称性检测是病态的。通常我们去识别一个不完整物体对称性的时候，会去靠先验来判别这个对称性是不是歧义的。但是对于一个我们不认识的物体或者说辨别不出来是什么种类的物体，我们没有先验，那么只能通过建立对称的correspondence来推测出对称性。这篇文章主要聚焦的问题就是：**对于认识或者不认识的物体，通过将对称性预测和对称映射耦合起来，构造一个统一的single-view的对称性检测方案**。
+The paper claims that once the 3D geometry of a model is known, obtaining its symmetries is trivial (is it really that simple? I doubt it). Traditional symmetry detection methods usually first establish correspondences between points or components, then aggregate to obtain symmetries. However, single-view representations are usually incomplete and viewpoint-limited. Detecting symmetries on incomplete geometry is ill-posed. When recognizing the symmetry of an incomplete object, we often rely on priors to judge whether the symmetry is ambiguous. But for an unknown object or one whose category cannot be determined, we have no prior, so we can only infer symmetry by establishing symmetric correspondences. This paper focuses on the problem: **For known or unknown objects, by coupling symmetry prediction and symmetry mapping, construct a unified single-view symmetry detection scheme.**
 
-### 逐点的对称性预测
+### Pointwise Symmetry Prediction
 
-因为对称性是non-local的，所以需要共同使用全局特征和局部特征来进行逐点对称性的预测。因为avg-pooling对于对称性预测是冗余的，max-pooling可能会丢失太多信息，该文采用weighted pooling，也就是对每个点的特征赋予一个权重，然后进行加权求和得到全局特征，该权重也是通过一个小网络学出来的，叫做spatially weighted pooling layer。
+Since symmetry is non-local, both global and local features are needed for pointwise symmetry prediction. Since avg-pooling is redundant for symmetry prediction and max-pooling may lose too much information, the paper uses weighted pooling, i.e., assigning a weight to each point's feature and then performing weighted sum to obtain the global feature. The weights are also learned by a small network, called the spatially weighted pooling layer.
 
-为了提高精度和泛化性，采用multi-task策略进行训练，也就是：
-1. 分类，判别对称性种类：no symmetry / reflective symmetry / rotational symmetry
-2. 回归对称性的参数
-3. 回归该点的对称点位置
-4. 分类，判别该点是不是某个点的对称点
+To improve accuracy and generalization, a multi-task strategy is used for training:
 
-为了让网络更加好训，所有预测的3D坐标均是相对于当前点的局部坐标，对于以上4部分，分别设计loss如下：
+1. Classification: determine symmetry type (no symmetry / reflective symmetry / rotational symmetry)
+2. Regression: symmetry parameters
+3. Regression: symmetric point position for each point
+4. Classification: determine whether a point is the symmetric point of another point
+
+To make the network easier to train, all predicted 3D coordinates are relative to the current point's local coordinates. The losses for the above four parts are:
+
 1. cross-entropy
-2. 当前点 $$ P_i $$ 投影到到预测的对称平面（对称轴）的点与真实的投影点之间的2范数
-3. 2范数
+2. L2 norm between the projection of point $$ P_i $$ onto the predicted symmetry plane (or axis) and the ground truth projection
+3. L2 norm
 4. cross-entropy
 
-对于旋转对称来说，我们去做上面 3 的 loss 不太容易，因为一个点的旋转对称点有可能有多个（旋转对称的阶数有穷）或无穷多个（连续的旋转对称），所以该文选择不直接对 3 做 L2 的 loss，而是去预测某点在不在该点对应的旋转对称轨道上的概率。并且通过将预测旋转对称的阶数转换成一个分类的问题，也就是 0~R 类，0 代表连续旋转对称，R 代表所能预测的最大旋转对称阶数，该文将 R 取作 10，也就是说该文能预测的最大的旋转对称的阶数为 10。
+For rotational symmetry, it's not easy to directly apply the L2 loss in part 3, because a point's rotationally symmetric counterpart may have multiple (finite-order) or infinitely many (continuous) possibilities. Therefore, the paper chooses not to directly apply L2 loss for 3, but instead predicts the probability that a point lies on the rotational symmetry orbit of another point. The predicted order of rotational symmetry is converted into a classification problem, i.e., 0~R classes, where 0 means continuous rotational symmetry, and R is the maximum order the network can predict (set to 10 in the paper).
 
-### 处理任意数目的对称性
-如果要处理任意数目的对称性预测，要不设计一个循环神经网络（显然是不现实的，因为我要知道到底循环多少次？），要么是引出 M 个分支来预测 M 个对称性（其中 M 是设定的最大对称性的数目）。但是采用后者的策略需要将 M 个分支各自区分开来（也就是定义顺序），该文采用基于 optimal assignment 的方法来训练网络。也就是将M个输出与GT对应起来。
+### Handling Arbitrary Numbers of Symmetries
 
-对于那些已经被判断对称性种类的分类器验证（输出不为0）的对称性预测值，找到它所对应的GT对称性，然后求loss。
+To handle arbitrary numbers of symmetry predictions, one could design a recurrent neural network (not practical, since you don't know how many times to loop), or introduce M branches to predict M symmetries (where M is the maximum number of symmetries). However, the latter requires distinguishing the M branches (i.e., defining an order). The paper uses an optimal assignment-based method for training, i.e., matching the M outputs to the ground truth symmetries.
+
+For those symmetry predictions validated by the symmetry type classifier (output not 0), find the corresponding ground truth symmetry and compute the loss.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -76,11 +80,11 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
     Figure 2
 </div>
 
-虽然这里是说处理任意数目的对称性，但是显然，依然受上一节中 R=10 的限制。
+Although this claims to handle arbitrary numbers of symmetries, it is still limited by the R=10 constraint above.
 
-### 对称性推理
+### Symmetry Inference
 
-在推理阶段，首先编码得到 RGB-D 的特征，然后对每个点进行对称性预测，然后使用聚类的方式得到最终的全局对称性预测结果。因为每个点预测对称性的准确性有差异，这里通过对 symmetry type classifier 的最后一层接一个概率层，得到每个点预测结果的权重，之后将这个概率作为 DBSCAN 中的密度权重，通过聚类得到最终的预测结果。
+During inference, first encode the RGB-D features, then predict symmetry for each point, then use clustering to obtain the final global symmetry predictions. Since the accuracy of each point's symmetry prediction varies, the last layer of the symmetry type classifier is followed by a probability layer, giving each point's prediction a weight. This probability is used as the density weight in DBSCAN clustering to obtain the final predictions.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -91,14 +95,13 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
     Figure 3
 </div>
 
-得到预测的对称性结果之后，还需要做的是对称性的检验，通过检验的对称性留下，没有通过检验的去除。将深度图转换为提速表示，将空间划分为三部分：可视部分，空气部分和未知部分，然后得到可视部分的对称部分，将对称部分与空气部分求交，便得到了 mismatch 的部分（很容易理解，如果对称部分是合理的，那么我摄像头应该本来就能看到，按理来说应该是可视部分，但是现在却为空气部分，说明不合理）。如果 mismatch 的部分太大，就说明该对称性预测的不对。这个策略作者也在训练阶段作为一项额外的约束进行了尝试，但是发现收敛太慢，所以就只在推理完之后作为一个验证手段。
+After obtaining the predicted symmetries, a symmetry validation step is performed: only symmetries that pass the validation are kept. The depth map is converted to a voxel representation, and the space is divided into three parts: visible, air, and unknown. The symmetric part of the visible region is obtained, and its intersection with the air region gives the mismatch region (intuitively, if the symmetry is correct, the symmetric part should be visible, but if it falls in the air region, it's likely incorrect). If the mismatch region is too large, the symmetry prediction is considered incorrect. The authors also tried using this as an extra constraint during training, but found convergence too slow, so it is only used as a post-inference validation.
 
+## Evaluation Metrics
 
-## 评价标准
+The paper uses precision-recall to evaluate symmetry prediction. Precision is the proportion of predicted symmetries that are correct, and recall is the proportion of ground truth symmetries that are correctly predicted.
 
-该文使用 precision-recall 指标来评价对称性预测的好与坏，其中 precision 代表我预测的对称性中有多大比例是正确的，而 recall 代表 GT 中的对称性我有多大的比例正确预测出来了。
-
-关于如何衡量预测的对称性是正确还是错误，作者给出了一个简单的评估指标：将模型按照预测的对称性对称过去，然后求原模型和对称模型的距离，该距离与 GT 对称性求得的距离做损失来打分。
+To determine whether a predicted symmetry is correct, the authors propose a simple metric: reflect the model according to the predicted symmetry, then compute the distance between the original and reflected models, and compare this to the distance using the ground truth symmetry.
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
@@ -111,14 +114,16 @@ Code: <a href="https://github.com/GodZarathustra/SymmetryNet">https://github.com
 
 ## Implementation
 
-读完 paper 有一个问题，如果每个模型都预测 $$M$$ 个对称性，但是每个模型的实际对称性个数可不是都一样的，有的模型 1 个对称，有的模型 2 个对称，有的模型可能更多，那么怎么做批处理，计算 loss 反传呢？读作者的代码，从 https://github.com/GodZarathustra/SymmetryNet/blob/HEAD/lib/loss.py#L10-L11 可以看到作者在每次计算 loss 的时候，实际上 batch size 为 1，在 https://github.com/GodZarathustra/SymmetryNet/blob/HEAD/tools/train_shapenet.py#L81-L82 也可以看到 dataloader 的 batch size 也被设为 1 了，那么事情就变得明了，作者在实际实现的时候，是一个模型一个模型训练的，没有采用批处理，这也算是无奈之举。
+After reading the paper, one question arises: if each model predicts $$M$$ symmetries, but the actual number of symmetries per model varies (some have 1, some 2, some more), how is batch processing and loss backpropagation handled? Looking at the code (https://github.com/GodZarathustra/SymmetryNet/blob/HEAD/lib/loss.py#L10-L11), the batch size is actually 1 during loss computation. In https://github.com/GodZarathustra/SymmetryNet/blob/HEAD/tools/train_shapenet.py#L81-L82, the dataloader batch size is also set to 1. So, in practice, the author trains one model at a time, not using batch processing, which is a necessary compromise.
 
-## 总结
+## Summary
 
-Pros.
-1. it handles RGB-D inputs, and can deal with incomplete and partial observation
-2. end-to-end deep learning method
+Pros:
+
+1. Handles RGB-D inputs and can deal with incomplete and partial observations
+2. End-to-end deep learning method
 
 Cons:
-1. strong supervision
-2. limited with pre-defined maximum of number of symmetries per object
+
+1. Strong supervision required
+2. Limited by the pre-defined maximum number of symmetries per object (R=10)
